@@ -14,8 +14,8 @@
 //
 // Author: David Vargas Frutos <david.vargas@urjc.es>
 
-#ifndef OPTITRACK2_DRIVER__VICON2_DRIVER_HPP_
-#define OPTITRACK2_DRIVER__VICON2_DRIVER_HPP_
+#ifndef OPTITRACK2_DRIVER__OPTITRACK2_DRIVER_HPP_
+#define OPTITRACK2_DRIVER__OPTITRACK2_DRIVER_HPP_
 
 #include <iostream>
 #include <sstream>
@@ -82,11 +82,9 @@ protected:
     sDataDescriptions* data_descriptions{nullptr};
     sFrameOfMocapData latest_data;
     sRigidBodyData latest_body_frame_data;
-    // rclcpp::Node::SharedPtr vicon_node;
     // std::shared_ptr<rclcpp::SyncParametersClient> parameters_client;
     rclcpp::Time now_time;
     std::string myParam;
-    // rclcpp::Publisher<mocap4ros_msgs::msg::Markers>::SharedPtr marker_pub_;
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseStamped>::SharedPtr pose_pub_;
     std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
     std::string connection_type_;
@@ -108,9 +106,6 @@ protected:
     static void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData* data, void* pUserData);
     void process_frame(sFrameOfMocapData data);
     void process_rigid_body(const rclcpp::Time & frame_time, unsigned int optitrack_frame_num);
-    void marker_to_tf(
-            mocap_msgs::msg::Marker marker,
-            int marker_num, const rclcpp::Time & frame_time);
 
     void control_start(const device_control_msgs::msg::Control::SharedPtr msg) override;
     void control_stop(const device_control_msgs::msg::Control::SharedPtr msg) override;
@@ -132,4 +127,4 @@ std::map<std::string, rmw_qos_history_policy_t> name_to_history_policy_map = {
         {"keep_all", RMW_QOS_POLICY_HISTORY_KEEP_ALL}
 };
 
-#endif  // OPTITRACK2_DRIVER__VICON2_DRIVER_HPP_
+#endif  // OPTITRACK2_DRIVER__OPTITRACK2_DRIVER_HPP_

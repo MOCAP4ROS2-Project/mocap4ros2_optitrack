@@ -31,22 +31,6 @@ using std::stringstream;
 OptitrackDriverNode::OptitrackDriverNode(const rclcpp::NodeOptions node_options)
         : device_control::ControlledLifecycleNode(static_cast<string>("optitrack2_driver_node"))
 {
-    declare_parameter<std::string>("stream_mode", "ClientPull");
-    declare_parameter<std::string>("host_name", "192.168.10.1:801");
-    declare_parameter<std::string>("tf_ref_frame_id", "vicon_world");
-    declare_parameter<std::string>("tracked_frame_suffix", "vicon");
-    declare_parameter<bool>("publish_markers", false);
-    declare_parameter<bool>("marker_data_enabled", false);
-    declare_parameter<bool>("unlabeled_marker_data_enabled", false);
-    declare_parameter<int>("lastFrameNumber", 0);
-    declare_parameter<int>("frameCount", 0);
-    declare_parameter<int>("droppedFrameCount", 0);
-    declare_parameter<int>("n_markers", 0);
-    declare_parameter<int>("n_unlabeled_markers", 0);
-    declare_parameter<std::string>("qos_history_policy", "keep_all");
-    declare_parameter<std::string>("qos_reliability_policy", "best_effort");
-    declare_parameter<int>("qos_depth", 10);
-
     declare_parameter<std::string>("connection_type", "Unicast");
     declare_parameter<std::string>("server_address", "000.000.000.000");
     declare_parameter<std::string>("local_address", "000.000.000.000");

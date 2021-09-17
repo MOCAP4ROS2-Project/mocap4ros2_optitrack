@@ -91,8 +91,8 @@ install(TARGETS
 #
 #  ament_lint_auto_find_test_dependencies()
 #
-#  ament_add_gtest(test_vicon2_driver test/test_vicon2_driver.cpp)
-#  target_link_libraries(test_vicon2_driver ${PROJECT_NAME})
+#  ament_add_gtest(test_optitrack2_driver test/test_optitrack2_driver.cpp)
+#  target_link_libraries(test_optitrack2_driver ${PROJECT_NAME})
 #
 #endif()
 
