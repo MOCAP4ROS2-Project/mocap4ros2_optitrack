@@ -83,18 +83,18 @@ install(TARGETS
 )
 
 
-#if(BUILD_TESTING)
-#
-#  find_package(ament_cmake_gtest REQUIRED)
-#  find_package(ament_lint_auto REQUIRED)
-#  find_package(ament_index_cpp REQUIRED)
-#
-#  ament_lint_auto_find_test_dependencies()
-#
-#  ament_add_gtest(test_optitrack2_driver test/test_optitrack2_driver.cpp)
-#  target_link_libraries(test_optitrack2_driver ${PROJECT_NAME})
-#
-#endif()
+if(BUILD_TESTING)
+
+  find_package(ament_cmake_gtest REQUIRED)
+  find_package(ament_lint_auto REQUIRED)
+  find_package(ament_index_cpp REQUIRED)
+
+  ament_lint_auto_find_test_dependencies()
+
+  ament_add_gtest(test_optitrack2_driver test/test_optitrack2_driver.cpp)
+  target_link_libraries(test_optitrack2_driver ${PROJECT_NAME})
+
+endif()
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})

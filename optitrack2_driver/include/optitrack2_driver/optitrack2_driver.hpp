@@ -87,6 +87,7 @@ protected:
     std::string myParam;
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseStamped>::SharedPtr pose_pub_;
     std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+    int32_t rigid_body_id_{-1};
     std::string connection_type_;
     std::string server_address_;
     std::string local_address_;
@@ -94,8 +95,6 @@ protected:
     uint16_t server_command_port_;
     uint16_t server_data_port_;
     std::string rigid_body_name_;
-    int32_t rigid_body_id_{-1};
-
     int lastFrameNumber_;
     int frameCount_;
     int droppedFrameCount_;

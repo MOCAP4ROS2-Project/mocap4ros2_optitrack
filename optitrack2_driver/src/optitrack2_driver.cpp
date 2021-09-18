@@ -289,14 +289,6 @@ bool OptitrackDriverNode::connect_optitrack()
     client.Disconnect();
     set_settings_optitrack();
 
-    for(int i=0; i < data_descriptions->nDataDescriptions; i++) {
-        if (data_descriptions->arrDataDescriptions[i].type == Descriptor_RigidBody) {
-            if (strcmp(data_descriptions->arrDataDescriptions[i].Data.RigidBodyDescription->szName,rigid_body_name_.c_str()) == 0){
-                rigid_body_id_ = data_descriptions->arrDataDescriptions[i].Data.RigidBodyDescription->ID;
-            }
-        }
-    }
-
     client.SetFrameReceivedCallback(OptitrackDriverNode::process_frame_callback, this);	// this function will receive data from the server
 
     if (client.Connect(client_params) == ErrorCode::ErrorCode_OK) {
@@ -313,6 +305,14 @@ bool OptitrackDriverNode::connect_optitrack()
         if (client.GetDataDescriptionList(&data_descriptions) != ErrorCode_OK || !data_descriptions)
         {
             RCLCPP_DEBUG(get_logger(),"[Client] Unable to retrieve Data Descriptions.\n");
+        }
+
+        for(int i=0; i < data_descriptions->nDataDescriptions; i++) {
+            if (data_descriptions->arrDataDescriptions[i].type == Descriptor_RigidBody) {
+                if (strcmp(data_descriptions->arrDataDescriptions[i].Data.RigidBodyDescription->szName,rigid_body_name_.c_str()) == 0){
+                    rigid_body_id_ = data_descriptions->arrDataDescriptions[i].Data.RigidBodyDescription->ID;
+                }
+            }
         }
 
         RCLCPP_INFO(get_logger(),"\n[Client] Server application info:\n");
