@@ -44,6 +44,8 @@ OptitrackDriverNode::OptitrackDriverNode(const rclcpp::NodeOptions node_options)
     declare_parameter<std::string>("qos_history_policy", "keep_all");
     declare_parameter<std::string>("qos_reliability_policy", "best_effort");
     declare_parameter<int>("qos_depth", 10);
+    client = new NatNetClient();
+    client->SetFrameReceivedCallback(&OptitrackDriverNode::process_frame_callback, this);	// this function will receive data from the server
 }
 
 // In charge of choose the different driver options related and provided by the Optitrack SDK
@@ -81,8 +83,8 @@ bool OptitrackDriverNode::stop_optitrack()
     RCLCPP_INFO(get_logger(), "Disconnecting from optitrack DataStream SDK");
     void* response;
     int nBytes;
-    if (client.SendMessageAndWait("Disconnect", &response, &nBytes) == ErrorCode_OK) {
-        client.Disconnect();
+    if (client->SendMessageAndWait("Disconnect", &response, &nBytes) == ErrorCode_OK) {
+        client->Disconnect();
         RCLCPP_INFO(get_logger(), "[Client] Disconnected");
         return true;
     } else {
@@ -111,8 +113,6 @@ void OptitrackDriverNode::process_frame(sFrameOfMocapData data)
 {
     latest_data = data;
 
-
-
     static rclcpp::Time lastTime;
     int OutputFrameNum = data.iFrame;
 
@@ -135,11 +135,12 @@ void OptitrackDriverNode::process_frame(sFrameOfMocapData data)
 
     if (frameDiff != 0) {
         const uint64_t softwareLatencyHostTicks = data.TransmitTimestamp - data.CameraDataReceivedTimestamp;
-        auto softwareLatencyNano = static_cast<rcl_duration_value_t>(((double)softwareLatencyHostTicks * 1000000000.0) / (double)(server_description.HighResClockFrequency));
+//        auto softwareLatencyNano = static_cast<rcl_duration_value_t>(((double)softwareLatencyHostTicks * 1000000000.0) / (double)(server_description.HighResClockFrequency));
 
-        rclcpp::Duration optitrack_latency(softwareLatencyNano);
+//        rclcpp::Duration optitrack_latency(softwareLatencyNano);
         get_latest_body_frame_data();
-        process_rigid_body(now_time - optitrack_latency, lastFrameNumber_);
+        now_time = this->get_clock()->now();
+        process_rigid_body(now_time, lastFrameNumber_);
         lastTime = now_time;
     }
 }
@@ -165,8 +166,8 @@ void OptitrackDriverNode::process_rigid_body(const rclcpp::Time & frame_time, un
     poseStamped.header.frame_id = std::to_string(rigid_body_id_);
     poseStamped.header.stamp = frame_time;
     poseStamped.pose.position.set__x(latest_body_frame_data.x);
-    poseStamped.pose.position.set__y(latest_body_frame_data.x);
-    poseStamped.pose.position.set__z(latest_body_frame_data.x);
+    poseStamped.pose.position.set__y(latest_body_frame_data.y);
+    poseStamped.pose.position.set__z(latest_body_frame_data.z);
     poseStamped.pose.orientation.set__w(latest_body_frame_data.qw);
     poseStamped.pose.orientation.set__x(latest_body_frame_data.qx);
     poseStamped.pose.orientation.set__y(latest_body_frame_data.qy);
@@ -286,23 +287,21 @@ bool OptitrackDriverNode::connect_optitrack()
             get_logger(),
             "Trying to connect to Optitrack NatNET SDK at %s ...", server_address_.c_str());
 
-    client.Disconnect();
+    client->Disconnect();
     set_settings_optitrack();
 
-    client.SetFrameReceivedCallback(OptitrackDriverNode::process_frame_callback, this);	// this function will receive data from the server
-
-    if (client.Connect(client_params) == ErrorCode::ErrorCode_OK) {
+    if (client->Connect(client_params) == ErrorCode::ErrorCode_OK) {
         RCLCPP_INFO(get_logger(), "... connected!");
 
         memset(&server_description, 0, sizeof(server_description));
-        client.GetServerDescription(&server_description);
+        client->GetServerDescription(&server_description);
         if(!server_description.HostPresent)
         {
             RCLCPP_DEBUG(get_logger(),"Unable to connect to server. Host not present.");
             return false;
         }
 
-        if (client.GetDataDescriptionList(&data_descriptions) != ErrorCode_OK || !data_descriptions)
+        if (client->GetDataDescriptionList(&data_descriptions) != ErrorCode_OK || !data_descriptions)
         {
             RCLCPP_DEBUG(get_logger(),"[Client] Unable to retrieve Data Descriptions.\n");
         }
@@ -327,7 +326,7 @@ bool OptitrackDriverNode::connect_optitrack()
         void* pResult;
         int nBytes = 0;
 
-        if ( client.SendMessageAndWait("FrameRate", &pResult, &nBytes) == ErrorCode_OK)
+        if ( client->SendMessageAndWait("FrameRate", &pResult, &nBytes) == ErrorCode_OK)
         {
             float fRate = *((float*)pResult);
             RCLCPP_INFO(get_logger(),"Mocap Framerate : %3.2f\n", fRate);

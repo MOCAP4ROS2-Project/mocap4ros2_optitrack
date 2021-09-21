@@ -1,12 +1,12 @@
 optitrack2_driver_node:
   ros__parameters:
-    connection_type: "Unicast" # Unicast / Multicast
-    server_address: "192.168.10.1"
-    local_address: "192.168.1.74"
-    multicast_address: "000.000.000.000"
-    server_command_port: 0
-    server_data_port: 0
-    rigid_body_name: "mav1"
+    connection_type: "Multicast" # Unicast / Multicast
+    server_address: "192.168.10.218"
+    local_address: "192.168.10.219"
+    multicast_address: "239.255.42.99"
+    server_command_port: 1510
+    server_data_port: 1511
+    rigid_body_name: "ground"
     lastFrameNumber: 0
     frameCount: 0
     droppedFrameCount: 0

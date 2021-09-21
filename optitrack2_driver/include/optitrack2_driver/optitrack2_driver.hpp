@@ -60,7 +60,7 @@ public:
                     std::vector<rclcpp::Parameter> {
                             rclcpp::Parameter("use_sim_time", true)
                     }));
-
+    ~OptitrackDriverNode() {delete client;}
     using CallbackReturnT =
     rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
@@ -76,7 +76,7 @@ public:
     void initParameters();
 
 protected:
-    NatNetClient client;
+    NatNetClient* client;
     sNatNetClientConnectParams client_params;
     sServerDescription server_description;
     sDataDescriptions* data_descriptions{nullptr};
@@ -102,10 +102,9 @@ protected:
     std::string qos_reliability_policy_;
     int qos_depth_;
 
-    static void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData* data, void* pUserData);
     void process_frame(sFrameOfMocapData data);
     void process_rigid_body(const rclcpp::Time & frame_time, unsigned int optitrack_frame_num);
-
+    static void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData* data, void* pUserData);
     void control_start(const device_control_msgs::msg::Control::SharedPtr msg) override;
     void control_stop(const device_control_msgs::msg::Control::SharedPtr msg) override;
     void get_latest_body_frame_data();
