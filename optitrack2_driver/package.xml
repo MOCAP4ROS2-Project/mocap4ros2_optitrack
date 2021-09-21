@@ -4,8 +4,11 @@
   <description>
      This is a ROS2 driver providing data from Optitrack motion capture systems.
   </description>
+
   <author>Christian Llanes</author>
   <maintainer email="christian.llanes@gatech.edu">Christian Llanes</maintainer>
+  <author>David Vargas</author>
+  <maintainer email="david.vargas@urjc.es">David Vargas</maintainer>
 
   <license>BSD</license>
 

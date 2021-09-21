@@ -1,3 +1,5 @@
+// Copyright 2021 Institute for Robotics and Intelligent Machines,
+//                Georgia Institute of Technology
 // Copyright 2019 Intelligent Robotics Lab
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,6 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+// Author: Christian Llanes <christian.llanes@gatech.edu>
 // Author: David Vargas Frutos <david.vargas@urjc.es>
 
 #ifndef OPTITRACK2_DRIVER__OPTITRACK2_DRIVER_HPP_
@@ -60,7 +63,7 @@ public:
                     std::vector<rclcpp::Parameter> {
                             rclcpp::Parameter("use_sim_time", true)
                     }));
-    ~OptitrackDriverNode() {delete client;}
+    ~OptitrackDriverNode() override {delete client;}
     using CallbackReturnT =
     rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 

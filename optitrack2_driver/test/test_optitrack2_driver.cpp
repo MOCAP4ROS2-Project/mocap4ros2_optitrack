@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Institute for Robotics and Intelligent Machines,
+//               Georgia Institute of Technology
 // Copyright (c) 2020, Intelligent Robotics Lab
 // Copyright (c) 2020, Airelectronics.
 //
@@ -12,6 +14,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
+// Author: Christian Llanes <christian.llanes@gatech.edu>
+// Author: David Vargas Frutos <david.vargas@urjc.es>
+
 
 #include <string>
 #include <list>
