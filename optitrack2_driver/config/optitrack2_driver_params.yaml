@@ -1,0 +1,17 @@
+optitrack2_driver_node:
+  ros__parameters:
+    connection_type: "Multicast" # Unicast / Multicast
+    server_address: "192.168.10.218"
+    local_address: "192.168.10.219"
+    multicast_address: "239.255.42.99"
+    server_command_port: 1510
+    server_data_port: 1511
+    rigid_body_name: "ground"
+    lastFrameNumber: 0
+    frameCount: 0
+    droppedFrameCount: 0
+    n_markers: 0
+    n_unlabeled_markers: 0
+    qos_history_policy: "keep_all"         # keep_all / keep_last
+    qos_reliability_policy: "best_effort"  # best_effort / reliable
+    qos_depth: 10                         # 10 / 100 / 1000
