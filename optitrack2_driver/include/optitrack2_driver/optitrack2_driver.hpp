@@ -89,6 +89,7 @@ protected:
     rclcpp::Time now_time;
     std::string myParam;
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseStamped>::SharedPtr pose_pub_;
+    rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::Markers>::SharedPtr markers_pub_;
     std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
     int32_t rigid_body_id_{-1};
     std::string connection_type_;
