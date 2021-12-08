@@ -21,6 +21,9 @@
 #include <vector>
 #include <memory>
 
+#include "mocap_msgs/msg/marker.hpp"
+#include "mocap_msgs/msg/markers.hpp"
+
 #include "optitrack2_driver/optitrack2_driver.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
@@ -136,6 +139,27 @@ void OptitrackDriverNode::process_frame(sFrameOfMocapData data)
     }
     lastFrameNumber_ = OutputFrameNum;
 
+    // Create and publish markers
+    mocap_msgs::msg::Markers msg;
+    msg.header.frame_id = "optitrack";
+    msg.header.stamp = now();
+    msg.frame_number = lastFrameNumber_;
+
+    for (int i = 0; i < data.nLabeledMarkers; i++) {
+      const auto & marker_data = data.LabeledMarkers[i];
+      mocap_msgs::msg::Marker marker;
+      marker.index = i;
+      marker.translation.x = marker_data.x;
+      marker.translation.y = marker_data.y;
+      marker.translation.z = marker_data.z;
+
+      msg.markers.push_back(marker);
+    }
+    std::cout << "publish " << msg.markers.size() << " markers" << std::endl;
+
+    markers_pub_->publish(msg);
+
+
     if (frameDiff != 0) {
         const uint64_t softwareLatencyHostTicks = data.TransmitTimestamp - data.CameraDataReceivedTimestamp;
 //        auto softwareLatencyNano = static_cast<rcl_duration_value_t>(((double)softwareLatencyHostTicks * 1000000000.0) / (double)(server_description.HighResClockFrequency));
@@ -222,6 +246,9 @@ OptitrackDriverNode::on_configure(const rclcpp_lifecycle::State &)
     update_pub_ = create_publisher<std_msgs::msg::Empty>(
             "/optitrack2_driver/update_notify", qos);
 
+    markers_pub_ = create_publisher<mocap_msgs::msg::Markers>(
+            "/optitrack2_driver/markers", 1000);
+
     RCLCPP_INFO(get_logger(), "Configured!\n");
 
     return CallbackReturnT::SUCCESS;
@@ -234,6 +261,7 @@ OptitrackDriverNode::on_activate(const rclcpp_lifecycle::State &)
     RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
     update_pub_->on_activate();
     pose_pub_->on_activate();
+    markers_pub_->on_activate();
     connect_optitrack();
     RCLCPP_INFO(get_logger(), "Activated!\n");
 
@@ -247,6 +275,7 @@ OptitrackDriverNode::on_deactivate(const rclcpp_lifecycle::State &)
     RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
     update_pub_->on_deactivate();
     pose_pub_->on_deactivate();
+    markers_pub_->on_deactivate();
     RCLCPP_INFO(get_logger(), "Deactivated!\n");
 
     return CallbackReturnT::SUCCESS;
