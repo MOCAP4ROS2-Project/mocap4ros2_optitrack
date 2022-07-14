@@ -11,11 +11,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-#list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
-set(NATNET_SDK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/NatNetSDK/) 
 set(LIBNATNET_SDK_LIBRARY ${CMAKE_CURRENT_SOURCE_DIR}/NatNetSDK/lib/libNatNet.so)
-set(natnet_include_directories
-  ${NATNET_SDK_DIR}/include
+set(NATNET_INCLUDE_DIR
+  ${CMAKE_CURRENT_SOURCE_DIR}/NatNetSDK/include
 )
 
 find_package(ament_cmake REQUIRED)
@@ -42,7 +40,7 @@ set(dependencies
 
 include_directories(
   include
-  ${natnet_include_directories}
+  ${NATNET_INCLUDE_DIR}
 )
 
 add_library(
