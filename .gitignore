@@ -1,2 +1,2 @@
-optitrack2_driver/NatNetSDK//*
-!optitrack2_driver/NatNetSDK//.gitkeep
+optitrack2_driver/NatNetSDK/*
+!optitrack2_driver/NatNetSDK/.gitkeep
