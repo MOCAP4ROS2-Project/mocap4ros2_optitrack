@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(optitrack2_driver)
+project(mocap_optitrack_driver)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -20,8 +20,8 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(mocap_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(device_control_msgs REQUIRED)
-find_package(device_control REQUIRED)
+find_package(mocap_control_msgs REQUIRED)
+find_package(mocap_control REQUIRED)
 
 find_package(NATNETSDK_CPP REQUIRED)
 
@@ -31,8 +31,8 @@ set(dependencies
   tf2
   tf2_ros
   mocap_msgs
-  device_control
-  device_control_msgs
+  mocap_control
+  mocap_control_msgs
 )
 
 include_directories(
@@ -42,23 +42,23 @@ include_directories(
 
 add_library(
   ${PROJECT_NAME}
-src/optitrack2_driver.cpp)
+src/mocap_optitrack_driver/mocap_optitrack_driver.cpp)
 
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE "OPTITRACK_BUILDING_LIBRARY")
 
-add_executable(optitrack2_driver_main
-  src/optitrack2_driver_main.cpp
+add_executable(mocap_optitrack_driver_main
+  src/mocap_optitrack_driver_main.cpp
 )
-ament_target_dependencies(optitrack2_driver_main ${dependencies})
-target_link_libraries(optitrack2_driver_main
+ament_target_dependencies(mocap_optitrack_driver_main ${dependencies})
+target_link_libraries(mocap_optitrack_driver_main
   ${PROJECT_NAME}
   ${LIBNATNET_SDK_LIBRARY}
 )
 
-ament_target_dependencies(optitrack2_driver ${dependencies})
-target_link_libraries(optitrack2_driver ${LIBNATNET_SDK_LIBRARY})
+ament_target_dependencies(mocap_optitrack_driver ${dependencies})
+target_link_libraries(mocap_optitrack_driver ${LIBNATNET_SDK_LIBRARY})
 #
 install(DIRECTORY include/${PROJECT_NAME}
   DESTINATION include/
@@ -71,7 +71,7 @@ install(DIRECTORY
 )
 
 install(TARGETS
-  optitrack2_driver_main
+  mocap_optitrack_driver_main
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -83,18 +83,11 @@ install(TARGETS
 )
 
 
-#if(BUILD_TESTING)
-#
-#  find_package(ament_cmake_gtest REQUIRED)
-#  find_package(ament_lint_auto REQUIRED)
-#  find_package(ament_index_cpp REQUIRED)
-#
-#  ament_lint_auto_find_test_dependencies()
-#
-#  ament_add_gtest(test_optitrack2_driver test/test_optitrack2_driver.cpp)
-#  target_link_libraries(test_optitrack2_driver ${PROJECT_NAME})
-#
-#endif()
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+  find_package(ament_cmake_gtest REQUIRED)
+endif()
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
