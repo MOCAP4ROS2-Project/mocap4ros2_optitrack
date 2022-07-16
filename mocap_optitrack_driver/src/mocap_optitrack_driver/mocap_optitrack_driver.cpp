@@ -109,6 +109,10 @@ void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUs
 void
 OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
 {
+  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+    return;
+  }
+
   frame_number_++;
 
   // Markers
