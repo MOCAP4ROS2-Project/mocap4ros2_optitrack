@@ -41,7 +41,7 @@ include_directories(
   ${NATNET_INCLUDE_DIR}
 )
 
-add_custom_command(OUTPUT ${LIBNATNET_SDK_LIBRARY}
+add_custom_command(OUTPUT ${LIBNATNET_SDK_LIBRARY} ${NATNET_INCLUDE_DIR}
   COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/install_sdk.py
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
 )
@@ -51,7 +51,7 @@ add_custom_target(
   DEPENDS ${LIBNATNET_SDK_LIBRARY}
 )
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} 
   src/mocap_optitrack_driver/mocap_optitrack_driver.cpp)
 
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
