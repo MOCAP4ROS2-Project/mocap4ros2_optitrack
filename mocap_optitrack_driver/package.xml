@@ -6,11 +6,11 @@
   </description>
 
   <author>Christian Llanes</author>
-  <maintainer email="christian.llanes@gatech.edu">Christian Llanes</maintainer>
   <author>David Vargas</author>
-  <maintainer email="david.vargas@urjc.es">David Vargas</maintainer>
+  <author>Francisco Martín Rico</author>
+  <maintainer email="fmrico@gmail.com">David Vargas</maintainer>
 
-  <license>BSD</license>
+  <license>Apache 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
