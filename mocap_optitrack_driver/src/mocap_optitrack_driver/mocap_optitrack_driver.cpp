@@ -33,7 +33,6 @@ namespace mocap_optitrack_driver
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-// The Optitrack driver node has differents parameters to initialized with the mocap_optitrack_driver_params.yaml
 OptitrackDriverNode::OptitrackDriverNode()
 : mocap_control::ControlledLifecycleNode("mocap_optitrack_driver_node")
 {
@@ -52,7 +51,6 @@ OptitrackDriverNode::~OptitrackDriverNode()
 {
 }
 
-// In charge of choose the different driver options related and provided by the Optitrack SDK
 void OptitrackDriverNode::set_settings_optitrack()
 {
   if (connection_type_ == "Multicast") {
@@ -71,12 +69,11 @@ void OptitrackDriverNode::set_settings_optitrack()
   client_params.serverDataPort = server_data_port_;
 }
 
-// Stop the optitrack_driver_node if the lifecycle node state is shutdown.
 bool OptitrackDriverNode::stop_optitrack()
 {
   RCLCPP_INFO(get_logger(), "Disconnecting from optitrack DataStream SDK");
 
-  void* response;
+  void * response;
   int nBytes;
   if (client->SendMessageAndWait("Disconnect", &response, &nBytes) == ErrorCode_OK) {
     client->Disconnect();
@@ -88,29 +85,29 @@ bool OptitrackDriverNode::stop_optitrack()
   }
 }
 
-// In charge of the transition of the lifecycle node
 void
 OptitrackDriverNode::control_start(const mocap_control_msgs::msg::Control::SharedPtr msg)
 {
   (void)msg;
-  trigger_transition(rclcpp_lifecycle::Transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE));
+  trigger_transition(
+    rclcpp_lifecycle::Transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE));
 }
 
-// In charge of the transition of the lifecycle node
 void
 OptitrackDriverNode::control_stop(const mocap_control_msgs::msg::Control::SharedPtr msg)
 {
   (void)msg;
-  trigger_transition(rclcpp_lifecycle::Transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE));
+  trigger_transition(
+    rclcpp_lifecycle::Transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE));
 }
 
-void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData* data, void* pUserData)
+void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUserData)
 {
-  static_cast<OptitrackDriverNode*>(pUserData)->process_frame(data);
+  static_cast<OptitrackDriverNode *>(pUserData)->process_frame(data);
 }
 
 void
-OptitrackDriverNode::process_frame(sFrameOfMocapData* data)
+OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
 {
   frame_number_++;
 
@@ -138,7 +135,7 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData* data)
   }
 
   if (mocap_rigid_body_pub_->get_subscription_count() > 0) {
-    for(int i = 0; i < data->nRigidBodies; i++) {
+    for (int i = 0; i < data->nRigidBodies; i++) {
       mocap_msgs::msg::RigidBody rb;
 
       rb.header.frame_id = "mocap";
@@ -245,34 +242,37 @@ OptitrackDriverNode::connect_optitrack()
 
     memset(&server_description, 0, sizeof(server_description));
     client->GetServerDescription(&server_description);
-    if(!server_description.HostPresent) {
-      RCLCPP_DEBUG(get_logger(),"Unable to connect to server. Host not present.");
+    if (!server_description.HostPresent) {
+      RCLCPP_DEBUG(get_logger(), "Unable to connect to server. Host not present.");
       return false;
     }
 
     if (client->GetDataDescriptionList(&data_descriptions) != ErrorCode_OK || !data_descriptions) {
-      RCLCPP_DEBUG(get_logger(),"[Client] Unable to retrieve Data Descriptions.\n");
+      RCLCPP_DEBUG(get_logger(), "[Client] Unable to retrieve Data Descriptions.\n");
     }
 
     RCLCPP_INFO(get_logger(), "\n[Client] Server application info:\n");
     RCLCPP_INFO(
-      get_logger(), "Application: %s (ver. %d.%d.%d.%d)\n", server_description.szHostApp, server_description.HostAppVersion[0],
-      server_description.HostAppVersion[1], server_description.HostAppVersion[2], server_description.HostAppVersion[3]);
+      get_logger(), "Application: %s (ver. %d.%d.%d.%d)\n",
+      server_description.szHostApp, server_description.HostAppVersion[0],
+      server_description.HostAppVersion[1], server_description.HostAppVersion[2],
+      server_description.HostAppVersion[3]);
     RCLCPP_INFO(
-      get_logger(), "NatNet Version: %d.%d.%d.%d\n", server_description.NatNetVersion[0], server_description.NatNetVersion[1],
+      get_logger(), "NatNet Version: %d.%d.%d.%d\n", server_description.NatNetVersion[0],
+      server_description.NatNetVersion[1],
       server_description.NatNetVersion[2], server_description.NatNetVersion[3]);
-    RCLCPP_INFO(get_logger(),"Client IP:%s\n", client_params.localAddress);
-    RCLCPP_INFO(get_logger(),"Server IP:%s\n", client_params.serverAddress);
-    RCLCPP_INFO(get_logger(),"Server Name:%s\n", server_description.szHostComputerName);
+    RCLCPP_INFO(get_logger(), "Client IP:%s\n", client_params.localAddress);
+    RCLCPP_INFO(get_logger(), "Server IP:%s\n", client_params.serverAddress);
+    RCLCPP_INFO(get_logger(), "Server Name:%s\n", server_description.szHostComputerName);
 
-    void* pResult;
+    void * pResult;
     int nBytes = 0;
 
     if (client->SendMessageAndWait("FrameRate", &pResult, &nBytes) == ErrorCode_OK) {
-        float fRate = *((float*)pResult);
-        RCLCPP_INFO(get_logger(),"Mocap Framerate : %3.2f\n", fRate);
+      float fRate = *(static_cast<float *>(pResult));
+      RCLCPP_INFO(get_logger(), "Mocap Framerate : %3.2f\n", fRate);
     } else {
-      RCLCPP_DEBUG(get_logger(),"Error getting frame rate.\n");
+      RCLCPP_DEBUG(get_logger(), "Error getting frame rate.\n");
     }
   } else {
     RCLCPP_INFO(get_logger(), "... not connected :( ");
