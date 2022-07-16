@@ -25,7 +25,7 @@ jobs:
         with:
           package-name: mocap_optitrack_driver
           target-ros2-distro: humble
-          vcs-repo-file-url: https://raw.githubusercontent.com/MOCAP4ROS2-Project/mocap/main/dependency_repos.repos
+          vcs-repo-file-url: https://raw.githubusercontent.com/MOCAP4ROS2-Project/mocap4ros2_optitrack/main/dependency_repos.repos
       - name: Codecov
         uses: codecov/codecov-action@v1.1.0
         with:
