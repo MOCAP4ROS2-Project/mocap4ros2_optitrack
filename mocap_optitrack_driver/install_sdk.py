@@ -19,10 +19,13 @@ import os
 
 print('Downloading started')
 
-url = "https://s3.amazonaws.com/naturalpoint/software/"
-"NatNetSDKLinux/ubuntu/NatNet_SDK_4.0_ubuntu.tar"
+""" Tiny URL for
+  https://s3.amazonaws.com/naturalpoint/software/
+  NatNetSDKLinux/ubuntu/NatNet_SDK_4.0_ubuntu.tar
+"""
+url = 'https://tinyurl.com/4j3j8434' 
 req = requests.get(url)
-
+print(url)
 filename = 'NatNetSDK.tar'
 
 with open(filename, 'wb') as output_file:

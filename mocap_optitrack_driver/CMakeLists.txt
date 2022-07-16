@@ -26,8 +26,6 @@ find_package(geometry_msgs REQUIRED)
 find_package(mocap_control_msgs REQUIRED)
 find_package(mocap_control REQUIRED)
 
-#find_package(NATNETSDK_CPP REQUIRED)
-
 set(dependencies
   rclcpp
   rclcpp_lifecycle
@@ -44,12 +42,17 @@ include_directories(
 )
 
 add_custom_command(OUTPUT ${LIBNATNET_SDK_LIBRARY}
-  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}install_sdk.py
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/)
+  COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/install_sdk.py
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+)
 
-add_library(
-  ${PROJECT_NAME}
-src/mocap_optitrack_driver/mocap_optitrack_driver.cpp)
+add_custom_target(
+  GetNatNetSDK ALL
+  DEPENDS ${LIBNATNET_SDK_LIBRARY}
+)
+
+add_library(${PROJECT_NAME}
+  src/mocap_optitrack_driver/mocap_optitrack_driver.cpp)
 
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 target_compile_definitions(${PROJECT_NAME}
@@ -66,11 +69,11 @@ target_link_libraries(mocap_optitrack_driver_main
 
 ament_target_dependencies(mocap_optitrack_driver ${dependencies})
 target_link_libraries(mocap_optitrack_driver ${LIBNATNET_SDK_LIBRARY})
-#
+
 install(DIRECTORY include/${PROJECT_NAME}
   DESTINATION include/
 )
-#
+
 install(DIRECTORY
   launch
   config
