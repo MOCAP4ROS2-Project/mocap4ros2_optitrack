@@ -61,9 +61,9 @@ namespace mocap_optitrack_driver
 class OptitrackDriverNode : public mocap_control::ControlledLifecycleNode
 {
 public:
-  explicit OptitrackDriverNode();
+  OptitrackDriverNode();
   ~OptitrackDriverNode();
-  
+
   using CallbackReturnT =
     rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
@@ -79,17 +79,16 @@ public:
   bool stop_optitrack();
   void initParameters();
 
-  void process_frame(sFrameOfMocapData* data);
+  void process_frame(sFrameOfMocapData * data);
 
 protected:
-
   void control_start(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
   void control_stop(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
 
-  NatNetClient* client;
+  NatNetClient * client;
   sNatNetClientConnectParams client_params;
   sServerDescription server_description;
-  sDataDescriptions* data_descriptions{nullptr};
+  sDataDescriptions * data_descriptions{nullptr};
   sFrameOfMocapData latest_data;
   sRigidBodyData latest_body_frame_data;
 
@@ -106,7 +105,7 @@ protected:
   uint32_t frame_number_{0};
 };
 
-void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData* data, void* pUserData);
+void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUserData);
 
 }  // namespace mocap_optitrack_driver
 
