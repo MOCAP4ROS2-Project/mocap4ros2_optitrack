@@ -1,0 +1,36 @@
+name: main
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04]
+      fail-fast: false
+    steps:
+      - name: Setup ROS 2
+        uses: ros-tooling/setup-ros@0.3.4
+        with:
+          required-ros-distributions: humble
+      - name: build and test
+        uses: ros-tooling/action-ros-ci@0.2.6
+        with:
+          package-name: mocap_optitrack_driver
+          target-ros2-distro: humble
+          vcs-repo-file-url: https://raw.githubusercontent.com/MOCAP4ROS2-Project/mocap4ros2_optitrack/main/dependency_repos.repos
+      - name: Codecov
+        uses: codecov/codecov-action@v1.1.0
+        with:
+          file: ros_ws/lcov/total_coverage.info
+          flags: unittests
+          name: codecov-umbrella
+          # yml: ./codecov.yml
+          fail_ci_if_error: false

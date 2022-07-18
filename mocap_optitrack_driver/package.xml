@@ -1,16 +1,16 @@
 <package format="3">
-  <name>optitrack2_driver</name>
+  <name>mocap_optitrack_driver</name>
   <version>0.0.1</version>
   <description>
      This is a ROS2 driver providing data from Optitrack motion capture systems.
   </description>
 
   <author>Christian Llanes</author>
-  <maintainer email="christian.llanes@gatech.edu">Christian Llanes</maintainer>
   <author>David Vargas</author>
-  <maintainer email="david.vargas@urjc.es">David Vargas</maintainer>
+  <author>Francisco Martín Rico</author>
+  <maintainer email="fmrico@gmail.com">David Vargas</maintainer>
 
-  <license>BSD</license>
+  <license>Apache 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
@@ -22,8 +22,8 @@
   <build_depend>tf2_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>mocap_msgs</build_depend>
-  <build_depend>device_control</build_depend>
-  <build_depend>device_control_msgs</build_depend>
+  <build_depend>mocap_control</build_depend>
+  <build_depend>mocap_control_msgs</build_depend>
 
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>rclcpp</exec_depend>
@@ -33,8 +33,8 @@
   <exec_depend>tf2_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>mocap_msgs</exec_depend>
-  <exec_depend>device_control</exec_depend>
-  <exec_depend>device_control_msgs</exec_depend>
+  <exec_depend>mocap_control</exec_depend>
+  <exec_depend>mocap_control_msgs</exec_depend>
 
   <test_depend>ament_cmake_gmock</test_depend>
   <test_depend>ament_cmake_gtest</test_depend>
