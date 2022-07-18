@@ -44,9 +44,10 @@ def generate_launch_description():
     # print('')
 
     driver_node = LifecycleNode(
-        node_name='mocap_optitrack_driver_node',
+        name='mocap_optitrack_driver_node',
+        namespace='',
         package='mocap_optitrack_driver',
-        node_executable='mocap_optitrack_driver_main',
+        executable='mocap_optitrack_driver_main',
         output='screen',
         parameters=[params_file_path],
     )

@@ -174,6 +174,8 @@ OptitrackDriverNode::on_configure(const rclcpp_lifecycle::State & state)
   mocap_rigid_body_pub_ = create_publisher<mocap_msgs::msg::RigidBody>(
     "rigid_bodies", rclcpp::QoS(1000));
 
+  connect_optitrack();
+
   RCLCPP_INFO(get_logger(), "Configured!\n");
 
   return CallbackReturnT::SUCCESS;
@@ -185,7 +187,6 @@ OptitrackDriverNode::on_activate(const rclcpp_lifecycle::State & state)
   (void)state;
   mocap_markers_pub_->on_activate();
   mocap_rigid_body_pub_->on_activate();
-  connect_optitrack();
   RCLCPP_INFO(get_logger(), "Activated!\n");
 
   return CallbackReturnT::SUCCESS;
