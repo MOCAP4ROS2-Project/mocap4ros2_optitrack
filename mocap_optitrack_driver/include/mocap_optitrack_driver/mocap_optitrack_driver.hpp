@@ -75,6 +75,7 @@ public:
   CallbackReturnT on_error(const rclcpp_lifecycle::State & state);
 
   bool connect_optitrack();
+  bool disconnect_optitrack();
   void set_settings_optitrack();
   bool stop_optitrack();
   void initParameters();
