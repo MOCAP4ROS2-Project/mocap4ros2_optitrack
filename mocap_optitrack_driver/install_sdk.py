@@ -17,26 +17,32 @@ import requests
 import tarfile
 import os
 
-print('Downloading started')
+dir = os.listdir('NatNetSDK/')
 
-""" Tiny URL for
-  https://s3.amazonaws.com/naturalpoint/software/
-  NatNetSDKLinux/ubuntu/NatNet_SDK_4.0_ubuntu.tar
-"""
-url = 'https://tinyurl.com/4j3j8434' 
-req = requests.get(url)
-print(url)
-filename = 'NatNetSDK.tar'
+if 'lib' in dir and 'include' in dir:
+    pass
 
-with open(filename, 'wb') as output_file:
-    output_file.write(req.content)
-print('Downloading completed')
+else:
+    #print('Downloading started')
 
-print('Extracting started')
-tar = tarfile.open(filename)
-tar.extractall(path='NatNetSDK/')
-tar.close()
-print('Extracting completed')
+    """ Tiny URL for
+      https://s3.amazonaws.com/naturalpoint/software/
+      NatNetSDKLinux/ubuntu/NatNet_SDK_4.0_ubuntu.tar
+    """
+    url = 'https://tinyurl.com/4j3j8434' 
+    req = requests.get(url)
+    #print(url)
+    filename = 'NatNetSDK.tar'
 
-os.remove(filename)
-print('Removed extra files')
+    with open(filename, 'wb') as output_file:
+        output_file.write(req.content)
+    #print('Downloading completed')
+
+    #print('Extracting started')
+    tar = tarfile.open(filename)
+    tar.extractall(path='NatNetSDK/')
+    tar.close()
+    #print('Extracting completed')
+
+    os.remove(filename)
+    #print('Removed extra files')
