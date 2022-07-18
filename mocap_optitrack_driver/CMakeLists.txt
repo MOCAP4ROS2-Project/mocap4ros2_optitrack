@@ -41,14 +41,9 @@ include_directories(
   ${NATNET_INCLUDE_DIR}
 )
 
-add_custom_command(OUTPUT ${LIBNATNET_SDK_LIBRARY} ${NATNET_INCLUDE_DIR}
-  COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/install_sdk.py
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
-)
-
-add_custom_target(
-  GetNatNetSDK ALL
-  DEPENDS ${LIBNATNET_SDK_LIBRARY}
+execute_process(
+	COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/install_sdk.py
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_library(${PROJECT_NAME} 
