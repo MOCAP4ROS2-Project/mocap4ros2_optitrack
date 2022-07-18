@@ -34,7 +34,7 @@ using std::placeholders::_1;
 using std::placeholders::_2;
 
 OptitrackDriverNode::OptitrackDriverNode()
-: mocap_control::ControlledLifecycleNode("mocap_optitrack_driver_node")
+: ControlledLifecycleNode("mocap_optitrack_driver_node")
 {
   declare_parameter<std::string>("connection_type", "Unicast");
   declare_parameter<std::string>("server_address", "000.000.000.000");
@@ -73,16 +73,7 @@ bool OptitrackDriverNode::stop_optitrack()
 {
   RCLCPP_INFO(get_logger(), "Disconnecting from optitrack DataStream SDK");
 
-  void * response;
-  int nBytes;
-  if (client->SendMessageAndWait("Disconnect", &response, &nBytes) == ErrorCode_OK) {
-    client->Disconnect();
-    RCLCPP_INFO(get_logger(), "[Client] Disconnected");
-    return true;
-  } else {
-    RCLCPP_ERROR(get_logger(), "[Client] Disconnect not successful..");
-    return false;
-  }
+  return true;
 }
 
 void
@@ -178,7 +169,7 @@ OptitrackDriverNode::on_configure(const rclcpp_lifecycle::State & state)
 
   RCLCPP_INFO(get_logger(), "Configured!\n");
 
-  return CallbackReturnT::SUCCESS;
+  return ControlledLifecycleNode::on_configure(state);
 }
 
 CallbackReturnT
@@ -189,7 +180,7 @@ OptitrackDriverNode::on_activate(const rclcpp_lifecycle::State & state)
   mocap_rigid_body_pub_->on_activate();
   RCLCPP_INFO(get_logger(), "Activated!\n");
 
-  return CallbackReturnT::SUCCESS;
+  return ControlledLifecycleNode::on_activate(state);
 }
 
 CallbackReturnT
@@ -200,7 +191,7 @@ OptitrackDriverNode::on_deactivate(const rclcpp_lifecycle::State & state)
   mocap_rigid_body_pub_->on_deactivate();
   RCLCPP_INFO(get_logger(), "Deactivated!\n");
 
-  return CallbackReturnT::SUCCESS;
+  return ControlledLifecycleNode::on_deactivate(state);
 }
 
 CallbackReturnT
@@ -208,6 +199,12 @@ OptitrackDriverNode::on_cleanup(const rclcpp_lifecycle::State & state)
 {
   (void)state;
   RCLCPP_INFO(get_logger(), "Cleaned up!\n");
+
+  if (disconnect_optitrack()) {
+    return ControlledLifecycleNode::on_cleanup(state);
+  } else {
+    return CallbackReturnT::FAILURE;
+  }
 
   return CallbackReturnT::SUCCESS;
 }
@@ -218,7 +215,11 @@ OptitrackDriverNode::on_shutdown(const rclcpp_lifecycle::State & state)
   (void)state;
   RCLCPP_INFO(get_logger(), "Shutted down!\n");
 
-  return CallbackReturnT::SUCCESS;
+  if (disconnect_optitrack()) {
+    return ControlledLifecycleNode::on_shutdown(state);
+  } else {
+    return CallbackReturnT::FAILURE;
+  }
 }
 
 CallbackReturnT
@@ -228,10 +229,11 @@ OptitrackDriverNode::on_error(const rclcpp_lifecycle::State & state)
   RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
   RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
 
-  return CallbackReturnT::SUCCESS;
+  disconnect_optitrack();
+
+  return ControlledLifecycleNode::on_error(state);
 }
 
-// In charge of find and connect the driver with the optitrack SDK.
 bool
 OptitrackDriverNode::connect_optitrack()
 {
@@ -287,7 +289,21 @@ OptitrackDriverNode::connect_optitrack()
   return true;
 }
 
-// Init the necessary parameters to use the optitrack SDK.
+bool
+OptitrackDriverNode::disconnect_optitrack()
+{
+  void * response;
+  int nBytes;
+  if (client->SendMessageAndWait("Disconnect", &response, &nBytes) == ErrorCode_OK) {
+    client->Disconnect();
+    RCLCPP_INFO(get_logger(), "[Client] Disconnected");
+    return true;
+  } else {
+    RCLCPP_ERROR(get_logger(), "[Client] Disconnect not successful..");
+    return false;
+  }
+}
+
 void
 OptitrackDriverNode::initParameters()
 {
