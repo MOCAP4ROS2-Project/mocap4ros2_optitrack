@@ -120,8 +120,8 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
       marker.id_type = mocap_msgs::msg::Marker::USE_INDEX;
       marker.marker_index = i;
       marker.translation.x = marker_data.x;
-      marker.translation.y = marker_data.z;
-      marker.translation.z = marker_data.y;
+      marker.translation.y = marker_data.y;
+      marker.translation.z = marker_data.z;
 
       msg.markers.push_back(marker);
     }
