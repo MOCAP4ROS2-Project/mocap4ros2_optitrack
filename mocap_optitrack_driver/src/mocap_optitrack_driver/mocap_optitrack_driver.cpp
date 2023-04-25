@@ -108,7 +108,7 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
   std::map<int,std::vector<mocap_msgs::msg::Marker>> marker2rb;
 
   // Markers
-  if (mocap_markers_pub_->get_subscription_count() > 0) {
+if (mocap_markers_pub_->get_subscription_count() > 0) {
     mocap_msgs::msg::Markers msg;
     msg.header.frame_id = "map";
     msg.header.stamp = now();
