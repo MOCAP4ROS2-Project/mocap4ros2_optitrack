@@ -110,7 +110,7 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
   // Markers
   if (mocap_markers_pub_->get_subscription_count() > 0) {
     mocap_msgs::msg::Markers msg;
-    msg.header.frame_id = "mocap";
+    msg.header.frame_id = "map";
     msg.header.stamp = now();
     msg.frame_number = frame_number_;
 
@@ -126,8 +126,8 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
       marker.id_type = mocap_msgs::msg::Marker::USE_INDEX;
       marker.marker_index = i;
       marker.translation.x = marker_data.x;
-      marker.translation.y = marker_data.z;
-      marker.translation.z = marker_data.y;
+      marker.translation.y = marker_data.y;
+      marker.translation.z = marker_data.z;
       if (ActiveMarker || Unlabeled){
         msg.markers.push_back(marker);
       }
@@ -142,7 +142,7 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
     for (int i = 0; i < data->nRigidBodies; i++) {
       mocap_msgs::msg::RigidBody rb;
 
-      rb.header.frame_id = "mocap";
+      rb.header.frame_id = "map";
       rb.header.stamp = now();
       rb.frame_number = frame_number_;
       rb.rigid_body_name = std::to_string(data->RigidBodies[i].ID);
