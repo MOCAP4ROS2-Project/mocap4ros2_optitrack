@@ -10,7 +10,7 @@ mkdir -p mocap_ws/src && cd mocap_ws/src
 ```
 Download optitrack repo:
 ```
-git clone https://github.com/MOCAP4ROS2-Project/mocap4ros2_optitrack
+git clone https://github.com/MOCAP4ROS2-Project/mocap4ros2_optitrack.git
 ```
 Install dependencies:
 ```
@@ -38,5 +38,5 @@ ros2 lifecycle set /mocap_optitrack_driver_node activate
 ```
 Visualize in rViz:
 ```
-ros2 launch mocap_marker_viz mocap_marker_viz.launch.py
+ros2 launch mocap_marker_viz mocap_marker_viz.launch.py mocap_system:=optitrack
 ```
