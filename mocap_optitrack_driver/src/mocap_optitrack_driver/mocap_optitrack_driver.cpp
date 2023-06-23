@@ -105,12 +105,12 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
   }
 
   frame_number_++;
-  std::map<int,std::vector<mocap_msgs::msg::Marker>> marker2rb;
+  std::map<int, std::vector<mocap_msgs::msg::Marker>> marker2rb;
 
   // Markers
-if (mocap_markers_pub_->get_subscription_count() > 0) {
+  if (mocap_markers_pub_->get_subscription_count() > 0) {
     mocap_msgs::msg::Markers msg;
-    msg.header.frame_id = "mocap";
+    msg.header.frame_id = "map";
     msg.header.stamp = now();
     msg.frame_number = frame_number_;
 
@@ -120,7 +120,7 @@ if (mocap_markers_pub_->get_subscription_count() > 0) {
       bool ActiveMarker = ((data->LabeledMarkers[i].params & 0x20) != 0);
       sMarker & marker_data = data->LabeledMarkers[i];
       int modelID, markerID;
-      NatNet_DecodeID( marker_data.ID, &modelID, &markerID );
+      NatNet_DecodeID(marker_data.ID, &modelID, &markerID);
 
       mocap_msgs::msg::Marker marker;
       marker.id_type = mocap_msgs::msg::Marker::USE_INDEX;
@@ -128,10 +128,9 @@ if (mocap_markers_pub_->get_subscription_count() > 0) {
       marker.translation.x = marker_data.x;
       marker.translation.y = marker_data.y;
       marker.translation.z = marker_data.z;
-      if (ActiveMarker || Unlabeled){
+      if (ActiveMarker || Unlabeled) {
         msg.markers.push_back(marker);
-      }
-      else{
+      } else {
         marker2rb[modelID].push_back(marker);
       }
     }
@@ -139,12 +138,14 @@ if (mocap_markers_pub_->get_subscription_count() > 0) {
   }
 
   if (mocap_rigid_body_pub_->get_subscription_count() > 0) {
+    mocap_msgs::msg::RigidBodies msg_rb;
+    msg_rb.header.frame_id = "map";
+    msg_rb.header.stamp = now();
+    msg_rb.frame_number = frame_number_;
+
     for (int i = 0; i < data->nRigidBodies; i++) {
       mocap_msgs::msg::RigidBody rb;
 
-      rb.header.frame_id = "mocap";
-      rb.header.stamp = now();
-      rb.frame_number = frame_number_;
       rb.rigid_body_name = std::to_string(data->RigidBodies[i].ID);
       rb.pose.position.x = data->RigidBodies[i].x;
       rb.pose.position.y = data->RigidBodies[i].y;
@@ -154,8 +155,11 @@ if (mocap_markers_pub_->get_subscription_count() > 0) {
       rb.pose.orientation.z = data->RigidBodies[i].qz;
       rb.pose.orientation.w = data->RigidBodies[i].qw;
       rb.markers = marker2rb[data->RigidBodies[i].ID];
-      mocap_rigid_body_pub_->publish(rb);
+
+      msg_rb.rigidbodies.push_back(rb);
     }
+
+    mocap_rigid_body_pub_->publish(msg_rb);
   }
 }
 
@@ -172,7 +176,7 @@ OptitrackDriverNode::on_configure(const rclcpp_lifecycle::State & state)
 
   mocap_markers_pub_ = create_publisher<mocap_msgs::msg::Markers>(
     "markers", rclcpp::QoS(1000));
-  mocap_rigid_body_pub_ = create_publisher<mocap_msgs::msg::RigidBody>(
+  mocap_rigid_body_pub_ = create_publisher<mocap_msgs::msg::RigidBodies>(
     "rigid_bodies", rclcpp::QoS(1000));
 
   connect_optitrack();

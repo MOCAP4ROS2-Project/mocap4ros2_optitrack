@@ -36,6 +36,7 @@
 #include "mocap_msgs/msg/marker.hpp"
 #include "mocap_msgs/msg/markers.hpp"
 #include "mocap_msgs/msg/rigid_body.hpp"
+#include "mocap_msgs/msg/rigid_bodies.hpp"
 
 #include "std_msgs/msg/empty.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
@@ -96,7 +97,8 @@ protected:
   sRigidBodyData latest_body_frame_data;
 
   rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::Markers>::SharedPtr mocap_markers_pub_;
-  rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::RigidBody>::SharedPtr mocap_rigid_body_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::RigidBodies>::SharedPtr
+    mocap_rigid_body_pub_;
 
   std::string connection_type_;
   std::string server_address_;
