@@ -21,6 +21,8 @@
 #include <vector>
 #include <memory>
 
+#include "std_msgs/msg/header.hpp"
+
 #include "mocap_msgs/msg/marker.hpp"
 #include "mocap_msgs/msg/markers.hpp"
 
@@ -97,7 +99,6 @@ void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUs
   static_cast<OptitrackDriverNode *>(pUserData)->process_frame(data);
 }
 
-
 std::chrono::nanoseconds OptitrackDriverNode::get_optitrack_system_latency(sFrameOfMocapData * data){
   const bool bSystemLatencyAvailable = data->CameraMidExposureTimestamp != 0;
 
@@ -118,7 +119,6 @@ std::chrono::nanoseconds OptitrackDriverNode::get_optitrack_system_latency(sFram
   }
 }
 
-
 void
 OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
 {
@@ -129,14 +129,16 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
   frame_number_++;
   rclcpp::Duration frame_delay = rclcpp::Duration(get_optitrack_system_latency(data));
 
+  std_msgs::msg::Header header;
+  header.stamp = now() - frame_delay;
+  header.frame_id = "map";
 
   std::map<int, std::vector<mocap_msgs::msg::Marker>> marker2rb;
 
   // Markers
   if (mocap_markers_pub_->get_subscription_count() > 0) {
     mocap_msgs::msg::Markers msg;
-    msg.header.frame_id = "map";
-    msg.header.stamp = now();
+    msg.header = header;
     msg.frame_number = frame_number_;
 
     for (int i = 0; i < data->nLabeledMarkers; i++) {
@@ -164,8 +166,7 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
 
   if (mocap_rigid_body_pub_->get_subscription_count() > 0) {
     mocap_msgs::msg::RigidBodies msg_rb;
-    msg_rb.header.frame_id = "map";
-    msg_rb.header.stamp = now();
+    msg_rb.header = header;
     msg_rb.frame_number = frame_number_;
 
     for (int i = 0; i < data->nRigidBodies; i++) {
