@@ -94,24 +94,28 @@ OptitrackDriverNode::control_stop(const mocap_control_msgs::msg::Control::Shared
 
 void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUserData)
 {
+  static_cast<OptitrackDriverNode *>(pUserData)->process_frame(data);
+}
 
 
-  // Sample code
+double OptitrackDriverNode::get_optitrack_system_latency(sFrameOfMocapData * data){
   const bool bSystemLatencyAvailable = data->CameraMidExposureTimestamp != 0;
 
-  if ( bSystemLatencyAvailable )
-  {
-      const double clientLatencyMillisec = static_cast<OptitrackDriverNode *>(pUserData)->client->SecondsSinceHostTimestamp(data->CameraMidExposureTimestamp) * 1000.0;
-      const double transitLatencyMillisec = static_cast<OptitrackDriverNode *>(pUserData)->client->SecondsSinceHostTimestamp( data->TransmitTimestamp ) * 1000.0;
+  if ( bSystemLatencyAvailable ){
+    const double clientLatencyMillisec = client->SecondsSinceHostTimestamp(data->CameraMidExposureTimestamp) * 1000.0;
+    const double transitLatencyMillisec = client->SecondsSinceHostTimestamp(data->TransmitTimestamp ) * 1000.0;
 
-      if(clientLatencyMillisec >= 100){
-        RCLCPP_INFO(static_cast<OptitrackDriverNode *>(pUserData)->get_logger(), "Transmission: [%f], Total: [%f]", transitLatencyMillisec, clientLatencyMillisec);
-      }
+    if(clientLatencyMillisec >= 100){
+      RCLCPP_INFO(get_logger(), "Transmission: [%f], Total: [%f]", transitLatencyMillisec, clientLatencyMillisec);
+    }
+    return clientLatencyMillisec;
   }
-
-  static_cast<OptitrackDriverNode *>(pUserData)->process_frame(data);
-
+  else{
+    RCLCPP_WARN_ONCE(get_logger(), "Optitrack's system latency not available");
+    return 0.0;
+  }
 }
+
 
 void
 OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
@@ -122,6 +126,8 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
 
   frame_number_++;
   std::map<int, std::vector<mocap_msgs::msg::Marker>> marker2rb;
+
+  //todo add here
 
   // Markers
   if (mocap_markers_pub_->get_subscription_count() > 0) {

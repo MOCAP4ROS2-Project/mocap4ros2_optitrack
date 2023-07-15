@@ -90,6 +90,8 @@ protected:
   void control_start(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
   void control_stop(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
 
+  double get_optitrack_system_latency(sFrameOfMocapData * data);
+
   sNatNetClientConnectParams client_params;
   sServerDescription server_description;
   sDataDescriptions * data_descriptions{nullptr};
@@ -97,8 +99,7 @@ protected:
   sRigidBodyData latest_body_frame_data;
 
   rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::Markers>::SharedPtr mocap_markers_pub_;
-  rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::RigidBodies>::SharedPtr
-    mocap_rigid_body_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::RigidBodies>::SharedPtr mocap_rigid_body_pub_;
 
   std::string connection_type_;
   std::string server_address_;
