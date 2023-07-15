@@ -2,7 +2,7 @@ mocap_optitrack_driver_node:
   ros__parameters:
     connection_type: "Unicast" # Unicast / Multicast
     server_address: "10.99.2.4"
-    local_address: "172.17.0.2"
+    local_address: "10.99.2.10"
     multicast_address: "239.255.42.99"
     server_command_port: 1510
     server_data_port: 1511
