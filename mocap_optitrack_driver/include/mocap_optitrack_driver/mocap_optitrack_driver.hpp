@@ -84,12 +84,12 @@ public:
   void initParameters();
 
   void process_frame(sFrameOfMocapData * data);
+  NatNetClient * client;
 
 protected:
   void control_start(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
   void control_stop(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
 
-  NatNetClient * client;
   sNatNetClientConnectParams client_params;
   sServerDescription server_description;
   sDataDescriptions * data_descriptions{nullptr};

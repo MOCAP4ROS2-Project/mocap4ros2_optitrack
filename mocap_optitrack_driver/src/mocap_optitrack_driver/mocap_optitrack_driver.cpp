@@ -94,7 +94,23 @@ OptitrackDriverNode::control_stop(const mocap_control_msgs::msg::Control::Shared
 
 void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUserData)
 {
+
+
+  // Sample code
+  const bool bSystemLatencyAvailable = data->CameraMidExposureTimestamp != 0;
+
+  if ( bSystemLatencyAvailable )
+  {
+      const double clientLatencyMillisec = static_cast<OptitrackDriverNode *>(pUserData)->client->SecondsSinceHostTimestamp(data->CameraMidExposureTimestamp) * 1000.0;
+      const double transitLatencyMillisec = static_cast<OptitrackDriverNode *>(pUserData)->client->SecondsSinceHostTimestamp( data->TransmitTimestamp ) * 1000.0;
+
+      if(clientLatencyMillisec >= 100){
+        RCLCPP_INFO(static_cast<OptitrackDriverNode *>(pUserData)->get_logger(), "Transmission: [%f], Total: [%f]", transitLatencyMillisec, clientLatencyMillisec);
+      }
+  }
+
   static_cast<OptitrackDriverNode *>(pUserData)->process_frame(data);
+
 }
 
 void
