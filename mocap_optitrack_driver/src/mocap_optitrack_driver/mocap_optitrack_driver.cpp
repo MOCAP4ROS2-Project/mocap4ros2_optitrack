@@ -108,7 +108,7 @@ std::chrono::nanoseconds OptitrackDriverNode::get_optitrack_system_latency(sFram
 
     const double largeLatencyThreshold = 100.0;
     if(clientLatencyMillisec >= largeLatencyThreshold){
-      RCLCPP_WARN_THROTTLE(get_logger(), *this->get_clock(), 500, "Optitrack delay (>%f.2ms) [Transmission: %fms, Total: %fms]", largeLatencyThreshold, transitLatencyMillisec, clientLatencyMillisec);
+      RCLCPP_WARN_THROTTLE(get_logger(), *this->get_clock(), 500, "Optitrack system latency >%.0f ms: [Transmission: %.0fms, Total: %.0fms]", largeLatencyThreshold, transitLatencyMillisec, clientLatencyMillisec);
     }
     auto clientLatencyNanosec = round<std::chrono::nanoseconds>(std::chrono::duration<float>{clientLatencyMillisec * 1000.0});
     return clientLatencyNanosec;
