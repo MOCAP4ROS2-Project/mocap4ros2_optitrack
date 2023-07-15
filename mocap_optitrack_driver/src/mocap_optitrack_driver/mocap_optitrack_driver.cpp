@@ -104,9 +104,9 @@ double OptitrackDriverNode::get_optitrack_system_latency(sFrameOfMocapData * dat
   if ( bSystemLatencyAvailable ){
     const double clientLatencyMillisec = client->SecondsSinceHostTimestamp(data->CameraMidExposureTimestamp) * 1000.0;
     const double transitLatencyMillisec = client->SecondsSinceHostTimestamp(data->TransmitTimestamp ) * 1000.0;
-
-    if(clientLatencyMillisec >= 100){
-      RCLCPP_INFO(get_logger(), "Transmission: [%f], Total: [%f]", transitLatencyMillisec, clientLatencyMillisec);
+    const double largeLatencyThreshold = 100.0;
+    if(clientLatencyMillisec >= largeLatencyThreshold){
+      RCLCPP_INFO_THROTTLE(get_logger(), *this->get_clock(), 500, "Detected large Optitrack delay (%f) Transmission: [%f], Total: [%f]", largeLatencyThreshold, transitLatencyMillisec, clientLatencyMillisec);
     }
     return clientLatencyMillisec;
   }
