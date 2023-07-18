@@ -21,8 +21,6 @@
 #include <vector>
 #include <memory>
 
-#include "std_msgs/msg/header.hpp"
-
 #include "mocap_msgs/msg/marker.hpp"
 #include "mocap_msgs/msg/markers.hpp"
 
@@ -131,17 +129,13 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
   frame_number_++;
   rclcpp::Duration frame_delay = rclcpp::Duration(get_optitrack_system_latency(data));
 
-  std_msgs::msg::Header header;
-  header.stamp = now() - frame_delay;
-  // header.stamp = now();
-  header.frame_id = "map";
-
   std::map<int, std::vector<mocap_msgs::msg::Marker>> marker2rb;
 
   // Markers
   if (mocap_markers_pub_->get_subscription_count() > 0) {
     mocap_msgs::msg::Markers msg;
-    msg.header = header;
+    msg.header.stamp = now() - frame_delay;
+    msg.header.frame_id = "map";
     msg.frame_number = frame_number_;
 
     for (int i = 0; i < data->nLabeledMarkers; i++) {
@@ -169,7 +163,8 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
 
   if (mocap_rigid_body_pub_->get_subscription_count() > 0) {
     mocap_msgs::msg::RigidBodies msg_rb;
-    msg_rb.header = header;
+    msg_rb.header.stamp = now() - frame_delay;
+    msg_rb.header.frame_id = "map";
     msg_rb.frame_number = frame_number_;
 
     for (int i = 0; i < data->nRigidBodies; i++) {
