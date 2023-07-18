@@ -1,13 +1,3 @@
-## Fork of [mocap4ros2_optitrack](https://github.com/MOCAP4ROS2-Project/mocap4ros2_optitrack) used for the [ROSbloX](https://rosblox.github.io/) project. 
-
-Includes these changes:
-- Adds an option to autostart the nodes
-- Doesn't include this issue (at least for us, not investigated why): https://github.com/MOCAP4ROS2-Project/mocap4ros2_optitrack/issues/18
-- Compensates for system delays of the Optitrack System using https://docs.optitrack.com/developer-tools/natnet-sdk/latency-measurements, see image
-
-![image](https://github.com/rosblox/mocap4ros2_optitrack/assets/20051567/ebed2352-8470-46e9-b26b-b454896da336)
-
-
 # mocap_optitrack_driver
 
 [![GitHub Action Status](https://github.com/MOCAP4ROS2-Project/mocap4ros2_optitrack/actions/workflows/main.yaml/badge.svg)](https://github.com/MOCAP4ROS2-Project/mocap_optitrack_driver)
