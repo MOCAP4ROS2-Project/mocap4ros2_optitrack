@@ -84,11 +84,12 @@ public:
   void initParameters();
 
   void process_frame(sFrameOfMocapData * data);
-  NatNetClient * client;
 
 protected:
   void control_start(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
   void control_stop(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
+
+  NatNetClient * client;
 
   std::chrono::nanoseconds get_optitrack_system_latency(sFrameOfMocapData * data);
 
@@ -99,7 +100,8 @@ protected:
   sRigidBodyData latest_body_frame_data;
 
   rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::Markers>::SharedPtr mocap_markers_pub_;
-  rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::RigidBodies>::SharedPtr mocap_rigid_body_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::RigidBodies>::SharedPtr
+    mocap_rigid_body_pub_;
 
   std::string connection_type_;
   std::string server_address_;
