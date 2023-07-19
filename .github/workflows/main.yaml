@@ -30,13 +30,13 @@ jobs:
         with:
           path: ros_ws/src
       - name: Setup ROS environment
-        uses: ros-tooling/setup-ros@0.3.4
+        uses: ros-tooling/setup-ros@0.7.0
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: Install requirements
         run: pip3 install requests
       - name: Build and Test
-        uses: ros-tooling/action-ros-ci@0.2.6
+        uses: ros-tooling/action-ros-ci@0.3.3
         with:
           package-name: mocap_optitrack_driver
           target-ros2-distro: ${{ matrix.ros_distribution }}
