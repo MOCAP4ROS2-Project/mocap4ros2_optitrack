@@ -41,4 +41,4 @@ jobs:
           package-name: mocap_optitrack_driver
           target-ros2-distro: ${{ matrix.ros_distribution }}
           vcs-repo-file-url: "https://raw.githubusercontent.com/MOCAP4ROS2-Project/mocap4ros2_optitrack/main/dependency_repos.repos"
-          skip-tests: true
+          skip-tests: false
