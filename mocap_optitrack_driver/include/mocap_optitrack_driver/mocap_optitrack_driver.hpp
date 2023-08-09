@@ -37,6 +37,7 @@
 #include "mocap_msgs/msg/rigid_bodies.hpp"
 
 #include "std_msgs/msg/empty.hpp"
+#include "std_srvs/srv/trigger.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 
 #include "rclcpp/rclcpp.hpp"
@@ -86,6 +87,9 @@ public:
 protected:
   void control_start(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
   void control_stop(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
+  void update_data_description(
+    const std::shared_ptr<std_srvs::srv::Trigger::Request> request, 
+    std::shared_ptr<std_srvs::srv::Trigger::Response> response);
 
   NatNetClient * client;
   sNatNetClientConnectParams client_params;
@@ -97,6 +101,7 @@ protected:
   rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::Markers>::SharedPtr mocap_markers_pub_;
   rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::RigidBodies>::SharedPtr
     mocap_rigid_body_pub_;
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr update_data_descriptions_srv_;
 
   std::string connection_type_;
   std::string server_address_;

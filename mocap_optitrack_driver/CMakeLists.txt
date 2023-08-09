@@ -19,6 +19,7 @@ set(NATNET_INCLUDE_DIR
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(mocap_msgs REQUIRED)
@@ -29,6 +30,7 @@ find_package(mocap_control REQUIRED)
 set(dependencies
   rclcpp
   rclcpp_lifecycle
+  std_srvs
   tf2
   tf2_ros
   mocap_msgs

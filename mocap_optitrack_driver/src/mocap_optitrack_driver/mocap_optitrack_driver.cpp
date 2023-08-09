@@ -69,6 +69,32 @@ void OptitrackDriverNode::set_settings_optitrack()
   client_params.serverDataPort = server_data_port_;
 }
 
+void OptitrackDriverNode::update_data_description(
+  const std::shared_ptr<std_srvs::srv::Trigger::Request>, 
+  std::shared_ptr<std_srvs::srv::Trigger::Response> response)
+{
+  // release memory allocated by previous GetDataDescriptionList()
+  if (data_descriptions) {
+      NatNet_FreeDescriptions(data_descriptions);
+  }
+  RCLCPP_INFO(get_logger(), "Requesting Data Descriptions");
+  
+  int result = client->GetDataDescriptionList(&data_descriptions);
+  if (result != ErrorCode::ErrorCode_OK) {
+    response->success = false;
+  }
+  // populate message with rigid bodies in data description DEAN DEAN REMOVE THESE LINES
+  std::string message = "";
+  for (int i = 0; i < data_descriptions->nDataDescriptions; ++i) {
+    if (data_descriptions->arrDataDescriptions[i].type == DataDescriptors::Descriptor_RigidBody) {
+      sRigidBodyDescription* rigid_body = data_descriptions->arrDataDescriptions[i].Data.RigidBodyDescription;
+      message.append(std::to_string(rigid_body->ID) + ": " + rigid_body->szName + "\n");
+    }
+  }
+  response->success = true;
+  response->message = message;
+}
+
 bool OptitrackDriverNode::stop_optitrack()
 {
   RCLCPP_INFO(get_logger(), "Disconnecting from optitrack DataStream SDK");
@@ -177,6 +203,9 @@ OptitrackDriverNode::on_configure(const rclcpp_lifecycle::State & state)
     "markers", rclcpp::QoS(1000));
   mocap_rigid_body_pub_ = create_publisher<mocap_msgs::msg::RigidBodies>(
     "rigid_bodies", rclcpp::QoS(1000));
+
+  update_data_descriptions_srv_ = this->create_service<std_srvs::srv::Trigger>(
+    "update_data_description", std::bind(&OptitrackDriverNode::update_data_description, this, std::placeholders::_1, std::placeholders::_2));
 
   connect_optitrack();
 
