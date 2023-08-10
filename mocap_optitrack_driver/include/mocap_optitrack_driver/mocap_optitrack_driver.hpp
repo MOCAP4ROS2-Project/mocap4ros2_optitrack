@@ -28,6 +28,8 @@
 #include <chrono>
 #include <vector>
 #include <optional>
+#include <unordered_map>
+#include <set>
 
 #include "rclcpp/time.hpp"
 
@@ -83,13 +85,16 @@ public:
   void initParameters();
 
   void process_frame(sFrameOfMocapData * data);
+  void publish_tf_data(sFrameOfMocapData * data);
 
 protected:
   void control_start(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
   void control_stop(const mocap_control_msgs::msg::Control::SharedPtr msg) override;
-  void update_data_description(
+  void update_rigid_bodies(
     const std::shared_ptr<std_srvs::srv::Trigger::Request> request, 
     std::shared_ptr<std_srvs::srv::Trigger::Response> response);
+  void update_rigid_body_id_map();
+  void get_rigid_bodies_from_params();
 
   NatNetClient * client;
   sNatNetClientConnectParams client_params;
@@ -98,10 +103,16 @@ protected:
   sFrameOfMocapData latest_data;
   sRigidBodyData latest_body_frame_data;
 
+  std::unordered_map<int, std::string> id_rigid_body_map;
+  std::unordered_map<std::string, int> rigid_body_id_map;
+  std::set<std::string> tf_frames_to_publish;
+
   rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::Markers>::SharedPtr mocap_markers_pub_;
   rclcpp_lifecycle::LifecyclePublisher<mocap_msgs::msg::RigidBodies>::SharedPtr
     mocap_rigid_body_pub_;
-  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr update_data_descriptions_srv_;
+  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr update_rigid_bodies_srv_;
 
   std::string connection_type_;
   std::string server_address_;
@@ -109,6 +120,8 @@ protected:
   std::string multicast_address_;
   uint16_t server_command_port_;
   uint16_t server_data_port_;
+  bool publish_tf_;
+  std::string parent_frame_name_;
 
   uint32_t frame_number_{0};
 };

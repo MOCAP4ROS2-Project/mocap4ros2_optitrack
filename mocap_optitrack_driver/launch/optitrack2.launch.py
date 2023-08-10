@@ -37,7 +37,7 @@ def generate_launch_description():
       'mocap_optitrack_driver'), 'config', 'mocap_optitrack_driver_params.yaml')
 
     stdout_linebuf_envvar = SetEnvironmentVariable(
-        'RCUTILS_CONSOLE_STDOUT_LINE_BUFFERED', '1')
+        'RCUTILS_LOGGING_BUFFERED_STREAM', '1')
 
     # print('')
     # print('params_file_path: ', params_file_path)

@@ -1,12 +1,11 @@
 mocap_optitrack_driver_node:
   ros__parameters:
-    connection_type: "Unicast" # Unicast / Multicast
-    server_address: "198.17.0.120"
-    local_address: "198.17.0.48"
+    connection_type: "Multicast" # Unicast / Multicast
+    server_address: "192.168.112.1"
+    local_address: "192.168.121.116"
     multicast_address: "239.255.42.99"
     server_command_port: 1510
     server_data_port: 1511
-    rigid_body_name: "ground"
     lastFrameNumber: 0
     frameCount: 0
     droppedFrameCount: 0
@@ -15,3 +14,11 @@ mocap_optitrack_driver_node:
     qos_history_policy: "keep_all"         # keep_all / keep_last
     qos_reliability_policy: "best_effort"  # best_effort / reliable
     qos_depth: 10                         # 10 / 100 / 1000
+
+    publish_tf: true
+    parent_frame_name: "optitrack"
+    rigid_bodies:
+      1:
+        name: "dean_rb"
+      2:
+        name: "Rigid Body 001"
