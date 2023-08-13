@@ -140,7 +140,6 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
     msg.frame_number = frame_number_;
 
     for (int i = 0; i < data->nLabeledMarkers; i++) {
-
       bool Unlabeled = ((data->LabeledMarkers[i].params & 0x10) != 0);
       bool ActiveMarker = ((data->LabeledMarkers[i].params & 0x20) != 0);
       sMarker & marker_data = data->LabeledMarkers[i];
