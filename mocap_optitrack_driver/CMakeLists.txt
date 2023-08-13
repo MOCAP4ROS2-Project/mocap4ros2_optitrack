@@ -42,11 +42,11 @@ include_directories(
 )
 
 execute_process(
-	COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/install_sdk.py
-	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/install_sdk.py
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_library(${PROJECT_NAME} 
+add_library(${PROJECT_NAME}
   src/mocap_optitrack_driver/mocap_optitrack_driver.cpp)
 
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
@@ -89,8 +89,29 @@ install(TARGETS
 
 
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
+  find_package(ament_cmake_copyright REQUIRED)
+  find_package(ament_cmake_clang_format REQUIRED)
+  find_package(ament_cmake_cppcheck REQUIRED)
+  find_package(ament_cmake_cpplint REQUIRED)
+  find_package(ament_cmake_lint_cmake REQUIRED)
+  find_package(ament_cmake_xmllint REQUIRED)
+  find_package(ament_cmake_uncrustify REQUIRED)
+
+
+  file(GLOB_RECURSE EXCLUDE_FILES NatNetSDK/*)
+
+  ament_copyright(EXCLUDE ${EXCLUDE_FILES})
+  ament_cppcheck(
+    EXCLUDE ${EXCLUDE_FILES}
+    LANGUAGE c++
+  )
+  ament_cpplint(EXCLUDE ${EXCLUDE_FILES})
+  ament_lint_cmake()
+  ament_uncrustify(
+    EXCLUDE ${EXCLUDE_FILES}
+    LANGUAGE c++
+  )
+
   find_package(ament_cmake_gtest REQUIRED)
 endif()
 
