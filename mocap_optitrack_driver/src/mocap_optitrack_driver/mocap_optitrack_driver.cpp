@@ -101,18 +101,19 @@ std::chrono::nanoseconds OptitrackDriverNode::get_optitrack_system_latency(sFram
 {
   const bool bSystemLatencyAvailable = data->CameraMidExposureTimestamp != 0;
 
-  if ( bSystemLatencyAvailable ) {
+  if (bSystemLatencyAvailable) {
     const double clientLatencySec =
       client->SecondsSinceHostTimestamp(data->CameraMidExposureTimestamp);
-    const double clientLatencyMillisec =  clientLatencySec * 1000.0;
+    const double clientLatencyMillisec = clientLatencySec * 1000.0;
     const double transitLatencyMillisec =
-      client->SecondsSinceHostTimestamp(data->TransmitTimestamp ) * 1000.0;
+      client->SecondsSinceHostTimestamp(data->TransmitTimestamp) * 1000.0;
 
     const double largeLatencyThreshold = 100.0;
-    if(clientLatencyMillisec >= largeLatencyThreshold) {
-      RCLCPP_WARN_THROTTLE(get_logger(), *this->get_clock(), 500,
-      "Optitrack system latency >%.0f ms: [Transmission: %.0fms, Total: %.0fms]",
-      largeLatencyThreshold, transitLatencyMillisec, clientLatencyMillisec);
+    if (clientLatencyMillisec >= largeLatencyThreshold) {
+      RCLCPP_WARN_THROTTLE(
+        get_logger(), *this->get_clock(), 500,
+        "Optitrack system latency >%.0f ms: [Transmission: %.0fms, Total: %.0fms]",
+        largeLatencyThreshold, transitLatencyMillisec, clientLatencyMillisec);
     }
 
     return round<std::chrono::nanoseconds>(std::chrono::duration<float>{clientLatencySec});
