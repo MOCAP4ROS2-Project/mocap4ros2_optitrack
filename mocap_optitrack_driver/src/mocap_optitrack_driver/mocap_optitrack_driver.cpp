@@ -97,6 +97,32 @@ void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUs
   static_cast<OptitrackDriverNode *>(pUserData)->process_frame(data);
 }
 
+std::chrono::nanoseconds OptitrackDriverNode::get_optitrack_system_latency(sFrameOfMocapData * data)
+{
+  const bool bSystemLatencyAvailable = data->CameraMidExposureTimestamp != 0;
+
+  if (bSystemLatencyAvailable) {
+    const double clientLatencySec =
+      client->SecondsSinceHostTimestamp(data->CameraMidExposureTimestamp);
+    const double clientLatencyMillisec = clientLatencySec * 1000.0;
+    const double transitLatencyMillisec =
+      client->SecondsSinceHostTimestamp(data->TransmitTimestamp) * 1000.0;
+
+    const double largeLatencyThreshold = 100.0;
+    if (clientLatencyMillisec >= largeLatencyThreshold) {
+      RCLCPP_WARN_THROTTLE(
+        get_logger(), *this->get_clock(), 500,
+        "Optitrack system latency >%.0f ms: [Transmission: %.0fms, Total: %.0fms]",
+        largeLatencyThreshold, transitLatencyMillisec, clientLatencyMillisec);
+    }
+
+    return round<std::chrono::nanoseconds>(std::chrono::duration<float>{clientLatencySec});
+  } else {
+    RCLCPP_WARN_ONCE(get_logger(), "Optitrack's system latency not available");
+    return std::chrono::nanoseconds::zero();
+  }
+}
+
 void
 OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
 {
@@ -105,13 +131,15 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
   }
 
   frame_number_++;
+  rclcpp::Duration frame_delay = rclcpp::Duration(get_optitrack_system_latency(data));
+
   std::map<int, std::vector<mocap_msgs::msg::Marker>> marker2rb;
 
   // Markers
   if (mocap_markers_pub_->get_subscription_count() > 0) {
     mocap_msgs::msg::Markers msg;
+    msg.header.stamp = now() - frame_delay;
     msg.header.frame_id = "map";
-    msg.header.stamp = now();
     msg.frame_number = frame_number_;
 
     for (int i = 0; i < data->nLabeledMarkers; i++) {
@@ -138,8 +166,8 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
 
   if (mocap_rigid_body_pub_->get_subscription_count() > 0) {
     mocap_msgs::msg::RigidBodies msg_rb;
+    msg_rb.header.stamp = now() - frame_delay;
     msg_rb.header.frame_id = "map";
-    msg_rb.header.stamp = now();
     msg_rb.frame_number = frame_number_;
 
     for (int i = 0; i < data->nRigidBodies; i++) {
