@@ -14,6 +14,7 @@ git clone https://github.com/MOCAP4ROS2-Project/mocap4ros2_optitrack.git
 ```
 Install dependencies:
 ```
+rosdep install --from-paths src --ignore-src -r -y
 vcs import < mocap4ros2_optitrack/dependency_repos.repos
 ```
 Compiling workspace:
