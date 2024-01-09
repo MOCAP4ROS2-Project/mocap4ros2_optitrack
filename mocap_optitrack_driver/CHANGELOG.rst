@@ -2,6 +2,11 @@
 Changelog for package mocap_optitrack_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update CMakeLists
+* Contributors: Francisco Martín Rico
+
 0.0.2 (2024-01-09)
 ------------------
 * mocap_optitrack_driver/.
@@ -36,4 +41,4 @@ Changelog for package mocap_optitrack_driver
 * Ignore NatNet external libs
 * Merge with last PRs
 * CI & refactor
-* Contributors: Aarsh Thakker, Francisco Martín Rico, Max, Max Polzin, Thakker Aarsh, jmguerreroh
+* Contributors: Aarsh Thakker, Francisco Martín Rico, Max Polzin, jmguerreroh
