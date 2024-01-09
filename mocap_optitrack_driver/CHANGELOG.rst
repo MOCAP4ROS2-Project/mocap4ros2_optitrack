@@ -2,8 +2,8 @@
 Changelog for package mocap_optitrack_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2024-01-09)
+------------------
 * mocap_optitrack_driver/.
   Format.
 * Linting as good as possible.
