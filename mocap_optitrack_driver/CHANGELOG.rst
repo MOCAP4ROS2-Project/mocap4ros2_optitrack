@@ -2,8 +2,8 @@
 Changelog for package mocap_optitrack_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.3 (2024-01-09)
+------------------
 * Update CMakeLists
 * Contributors: Francisco Martín Rico
 
