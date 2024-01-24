@@ -1,6 +1,6 @@
 // Copyright 2021 Institute for Robotics and Intelligent Machines,
 //                Georgia Institute of Technology
-// Copyright 2019 Intelligent Robotics Lab
+// Copyright 2024 Intelligent Robotics Lab
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,25 +16,26 @@
 //
 // Author: Christian Llanes <christian.llanes@gatech.edu>
 // Author: David Vargas Frutos <david.vargas@urjc.es>
+// Author: Francisco Martín <fmrico@urjc.es>
 
 #include <string>
 #include <vector>
 #include <memory>
 
-#include "mocap_msgs/msg/marker.hpp"
-#include "mocap_msgs/msg/markers.hpp"
+#include "mocap4r2_msgs/msg/marker.hpp"
+#include "mocap4r2_msgs/msg/markers.hpp"
 
-#include "mocap_optitrack_driver/mocap_optitrack_driver.hpp"
+#include "mocap4r2_optitrack_driver/mocap4r2_optitrack_driver.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
-namespace mocap_optitrack_driver
+namespace mocap4r2_optitrack_driver
 {
 
 using std::placeholders::_1;
 using std::placeholders::_2;
 
 OptitrackDriverNode::OptitrackDriverNode()
-: ControlledLifecycleNode("mocap_optitrack_driver_node")
+: ControlledLifecycleNode("mocap4r2_optitrack_driver_node")
 {
   declare_parameter<std::string>("connection_type", "Unicast");
   declare_parameter<std::string>("server_address", "000.000.000.000");
@@ -77,7 +78,7 @@ bool OptitrackDriverNode::stop_optitrack()
 }
 
 void
-OptitrackDriverNode::control_start(const mocap_control_msgs::msg::Control::SharedPtr msg)
+OptitrackDriverNode::control_start(const mocap4r2_control_msgs::msg::Control::SharedPtr msg)
 {
   (void)msg;
   trigger_transition(
@@ -85,7 +86,7 @@ OptitrackDriverNode::control_start(const mocap_control_msgs::msg::Control::Share
 }
 
 void
-OptitrackDriverNode::control_stop(const mocap_control_msgs::msg::Control::SharedPtr msg)
+OptitrackDriverNode::control_stop(const mocap4r2_control_msgs::msg::Control::SharedPtr msg)
 {
   (void)msg;
   trigger_transition(
@@ -133,11 +134,11 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
   frame_number_++;
   rclcpp::Duration frame_delay = rclcpp::Duration(get_optitrack_system_latency(data));
 
-  std::map<int, std::vector<mocap_msgs::msg::Marker>> marker2rb;
+  std::map<int, std::vector<mocap4r2_msgs::msg::Marker>> marker2rb;
 
   // Markers
-  if (mocap_markers_pub_->get_subscription_count() > 0) {
-    mocap_msgs::msg::Markers msg;
+  if (mocap4r2_markers_pub_->get_subscription_count() > 0) {
+    mocap4r2_msgs::msg::Markers msg;
     msg.header.stamp = now() - frame_delay;
     msg.header.frame_id = "map";
     msg.frame_number = frame_number_;
@@ -149,8 +150,8 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
       int modelID, markerID;
       NatNet_DecodeID(marker_data.ID, &modelID, &markerID);
 
-      mocap_msgs::msg::Marker marker;
-      marker.id_type = mocap_msgs::msg::Marker::USE_INDEX;
+      mocap4r2_msgs::msg::Marker marker;
+      marker.id_type = mocap4r2_msgs::msg::Marker::USE_INDEX;
       marker.marker_index = i;
       marker.translation.x = marker_data.x;
       marker.translation.y = marker_data.y;
@@ -161,17 +162,17 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
         marker2rb[modelID].push_back(marker);
       }
     }
-    mocap_markers_pub_->publish(msg);
+    mocap4r2_markers_pub_->publish(msg);
   }
 
-  if (mocap_rigid_body_pub_->get_subscription_count() > 0) {
-    mocap_msgs::msg::RigidBodies msg_rb;
+  if (mocap4r2_rigid_body_pub_->get_subscription_count() > 0) {
+    mocap4r2_msgs::msg::RigidBodies msg_rb;
     msg_rb.header.stamp = now() - frame_delay;
     msg_rb.header.frame_id = "map";
     msg_rb.frame_number = frame_number_;
 
     for (int i = 0; i < data->nRigidBodies; i++) {
-      mocap_msgs::msg::RigidBody rb;
+      mocap4r2_msgs::msg::RigidBody rb;
 
       rb.rigid_body_name = std::to_string(data->RigidBodies[i].ID);
       rb.pose.position.x = data->RigidBodies[i].x;
@@ -186,7 +187,7 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
       msg_rb.rigidbodies.push_back(rb);
     }
 
-    mocap_rigid_body_pub_->publish(msg_rb);
+    mocap4r2_rigid_body_pub_->publish(msg_rb);
   }
 }
 
@@ -201,9 +202,9 @@ OptitrackDriverNode::on_configure(const rclcpp_lifecycle::State & state)
   (void)state;
   initParameters();
 
-  mocap_markers_pub_ = create_publisher<mocap_msgs::msg::Markers>(
+  mocap4r2_markers_pub_ = create_publisher<mocap4r2_msgs::msg::Markers>(
     "markers", rclcpp::QoS(1000));
-  mocap_rigid_body_pub_ = create_publisher<mocap_msgs::msg::RigidBodies>(
+  mocap4r2_rigid_body_pub_ = create_publisher<mocap4r2_msgs::msg::RigidBodies>(
     "rigid_bodies", rclcpp::QoS(1000));
 
   connect_optitrack();
@@ -217,8 +218,8 @@ CallbackReturnT
 OptitrackDriverNode::on_activate(const rclcpp_lifecycle::State & state)
 {
   (void)state;
-  mocap_markers_pub_->on_activate();
-  mocap_rigid_body_pub_->on_activate();
+  mocap4r2_markers_pub_->on_activate();
+  mocap4r2_rigid_body_pub_->on_activate();
   RCLCPP_INFO(get_logger(), "Activated!\n");
 
   return ControlledLifecycleNode::on_activate(state);
@@ -228,8 +229,8 @@ CallbackReturnT
 OptitrackDriverNode::on_deactivate(const rclcpp_lifecycle::State & state)
 {
   (void)state;
-  mocap_markers_pub_->on_deactivate();
-  mocap_rigid_body_pub_->on_deactivate();
+  mocap4r2_markers_pub_->on_deactivate();
+  mocap4r2_rigid_body_pub_->on_deactivate();
   RCLCPP_INFO(get_logger(), "Deactivated!\n");
 
   return ControlledLifecycleNode::on_deactivate(state);
@@ -356,4 +357,4 @@ OptitrackDriverNode::initParameters()
   get_parameter<uint16_t>("server_data_port", server_data_port_);
 }
 
-}  // namespace mocap_optitrack_driver
+}  // namespace mocap4r2_optitrack_driver
