@@ -1,6 +1,6 @@
 # mocap4r2_optitrack_driver
 
-[![GitHub Action Status](https://github.com/MOCAP4ROS2-Project/mocap4ros2_optitrack/actions/workflows/rolling.yaml/badge.svg)](https://github.com/MOCAP4ROS2-Project/mocap4r2_optitrack_driver)
+[![rolling](https://github.com/MOCAP4ROS2-Project/mocap4ros2_optitrack/actions/workflows/rolling.yaml/badge.svg)](https://github.com/MOCAP4ROS2-Project/mocap4ros2_optitrack/actions/workflows/rolling.yaml)
 
 [![codecov](https://codecov.io/gh/MOCAP4ROS2-Project/mocap4r2_optitrack_driver/rolling/graph/badge.svg)](https://codecov.io/gh/MOCAP4ROS2-Project/mocap4r2_optitrack_driver)
 
