@@ -34,7 +34,7 @@ import lifecycle_msgs.msg
 def generate_launch_description():
 
     params_file_path = os.path.join(get_package_share_directory(
-      'mocap_optitrack_driver'), 'config', 'mocap_optitrack_driver_params.yaml')
+      'mocap4r2_optitrack_driver'), 'config', 'mocap4r2_optitrack_driver_params.yaml')
 
     stdout_linebuf_envvar = SetEnvironmentVariable(
         'RCUTILS_CONSOLE_STDOUT_LINE_BUFFERED', '1')
@@ -44,10 +44,10 @@ def generate_launch_description():
     # print('')
 
     driver_node = LifecycleNode(
-        name='mocap_optitrack_driver_node',
+        name='mocap4r2_optitrack_driver_node',
         namespace='',
-        package='mocap_optitrack_driver',
-        executable='mocap_optitrack_driver_main',
+        package='mocap4r2_optitrack_driver',
+        executable='mocap4r2_optitrack_driver_main',
         output='screen',
         parameters=[params_file_path],
     )

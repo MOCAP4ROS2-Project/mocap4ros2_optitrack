@@ -1,5 +1,5 @@
 <package format="3">
-  <name>mocap_optitrack_driver</name>
+  <name>mocap4r2_optitrack_driver</name>
   <version>0.0.1</version>
   <description>
      This is a ROS2 driver providing data from Optitrack motion capture systems.
@@ -21,9 +21,9 @@
   <build_depend>tf2</build_depend>
   <build_depend>tf2_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
-  <build_depend>mocap_msgs</build_depend>
-  <build_depend>mocap_control</build_depend>
-  <build_depend>mocap_control_msgs</build_depend>
+  <build_depend>mocap4r2_msgs</build_depend>
+  <build_depend>mocap4r2_control</build_depend>
+  <build_depend>mocap4r2_control_msgs</build_depend>
 
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>rclcpp</exec_depend>
@@ -32,9 +32,9 @@
   <exec_depend>tf2</exec_depend>
   <exec_depend>tf2_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>mocap_msgs</exec_depend>
-  <exec_depend>mocap_control</exec_depend>
-  <exec_depend>mocap_control_msgs</exec_depend>
+  <exec_depend>mocap4r2_msgs</exec_depend>
+  <exec_depend>mocap4r2_control</exec_depend>
+  <exec_depend>mocap4r2_control_msgs</exec_depend>
 
   <test_depend>ament_cmake_copyright</test_depend>
   <test_depend>ament_cmake_clang_format</test_depend>

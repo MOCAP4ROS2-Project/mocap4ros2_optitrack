@@ -1,4 +1,4 @@
-// Copyright 2019 Intelligent Robotics Lab
+// Copyright 2024 Intelligent Robotics Lab
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,17 +13,18 @@
 // limitations under the License.
 //
 // Author: David Vargas Frutos <david.vargas@urjc.es>
+// Author: Francisco Martín <fmrico@urjc.es>
 
 #include <iostream>
 #include <memory>
-#include "mocap_optitrack_driver/mocap_optitrack_driver.hpp"
+#include "mocap4r2_optitrack_driver/mocap4r2_optitrack_driver.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
   rclcpp::NodeOptions node_options;
-  auto node = std::make_shared<mocap_optitrack_driver::OptitrackDriverNode>();
+  auto node = std::make_shared<mocap4r2_optitrack_driver::OptitrackDriverNode>();
   rclcpp::spin(node->get_node_base_interface());
   rclcpp::shutdown();
 
