@@ -81,16 +81,12 @@ void
 OptitrackDriverNode::control_start(const mocap4r2_control_msgs::msg::Control::SharedPtr msg)
 {
   (void)msg;
-  trigger_transition(
-    rclcpp_lifecycle::Transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE));
 }
 
 void
 OptitrackDriverNode::control_stop(const mocap4r2_control_msgs::msg::Control::SharedPtr msg)
 {
   (void)msg;
-  trigger_transition(
-    rclcpp_lifecycle::Transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE));
 }
 
 void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUserData)
