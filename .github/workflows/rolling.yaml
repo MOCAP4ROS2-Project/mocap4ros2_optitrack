@@ -24,7 +24,7 @@ jobs:
         uses: ros-tooling/action-ros-ci@0.3.5
         with:
           package-name: mocap4r2_optitrack_driver
-          target-ros2-distro: rolling
+          target-ros2-distro: jazzy
           vcs-repo-file-url: https://raw.githubusercontent.com/aaggj/mocap4ros2_optitrack/rolling/dependency_repos.repos
       - name: Codecov
         uses: codecov/codecov-action@v1.1.0
