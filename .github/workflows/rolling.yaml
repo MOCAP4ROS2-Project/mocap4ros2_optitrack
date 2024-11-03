@@ -13,18 +13,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-24.04]
+        os: [ubuntu-22.04]
       fail-fast: false
     steps:
       - name: Setup ROS 2
-        uses: ros-tooling/setup-ros@0.7.1
+        uses: ros-tooling/setup-ros@0.7.9
         with:
-          required-ros-distributions: jazzy
+          required-ros-distributions: humble
       - name: build and test
-        uses: ros-tooling/action-ros-ci@0.3.5
+        uses: ros-tooling/action-ros-ci@0.3.15
         with:
           package-name: mocap4r2_optitrack_driver
-          target-ros2-distro: jazzy
+          target-ros2-distro: humble
           vcs-repo-file-url: https://raw.githubusercontent.com/aaggj/mocap4ros2_optitrack/rolling/dependency_repos.repos
       - name: Codecov
         uses: codecov/codecov-action@v1.1.0
