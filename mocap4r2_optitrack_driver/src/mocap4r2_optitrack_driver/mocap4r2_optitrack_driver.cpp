@@ -137,7 +137,7 @@ OptitrackDriverNode::process_frame(sFrameOfMocapData * data)
     mocap_interfaces::msg::MarkerArray msg;
     msg.header.stamp = now() - frame_delay;
     msg.header.frame_id = "map";
-    msg.seq = frame_number_; //marker index?
+    msg.seq = frame_number_;  // marker index?
 
     for (int i = 0; i < data->nLabeledMarkers; i++) {
       bool Unlabeled = ((data->LabeledMarkers[i].params & 0x10) != 0);
