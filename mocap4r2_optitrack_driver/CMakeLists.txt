@@ -2,14 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 project(mocap4r2_optitrack_driver)
 
-# Default to C++14
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
-endif()
+set(version 2.0)
+set(CMAKE_CXX_STANDARD 17)
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
 
 set(LIBNATNET_SDK_LIBRARY ${CMAKE_CURRENT_SOURCE_DIR}/NatNetSDK/lib/libNatNet.so)
 set(NATNET_INCLUDE_DIR
@@ -21,7 +16,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
-find_package(mocap4r2_msgs REQUIRED)
+find_package(mocap_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(mocap4r2_control_msgs REQUIRED)
 find_package(mocap4r2_control REQUIRED)
@@ -31,9 +26,9 @@ set(dependencies
   rclcpp_lifecycle
   tf2
   tf2_ros
-  mocap4r2_msgs
   mocap4r2_control
   mocap4r2_control_msgs
+  mocap_interfaces
 )
 
 include_directories(

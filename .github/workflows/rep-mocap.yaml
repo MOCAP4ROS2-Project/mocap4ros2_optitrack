@@ -1,12 +1,12 @@
-name: rolling
+name: rep-mocap
 
 on:
   pull_request:
     branches:
-      - rolling
+      - rep-mocap
   push:
     branches:
-      - rolling
+      - rep-mocap
       
 jobs:
   build-and-test:

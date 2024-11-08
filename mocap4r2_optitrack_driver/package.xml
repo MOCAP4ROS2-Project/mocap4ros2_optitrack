@@ -21,7 +21,8 @@
   <build_depend>tf2</build_depend>
   <build_depend>tf2_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
-  <build_depend>mocap4r2_msgs</build_depend>
+  <build_depend>mocap_interfaces</build_depend>
+  <!-- <build_depend>mocap4r2_msgs</build_depend> -->
   <build_depend>mocap4r2_control</build_depend>
   <build_depend>mocap4r2_control_msgs</build_depend>
 
@@ -32,7 +33,8 @@
   <exec_depend>tf2</exec_depend>
   <exec_depend>tf2_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>mocap4r2_msgs</exec_depend>
+  <exec_depend>mocap_interfaces</exec_depend>
+  <!-- <exec_depend>mocap4r2_msgs</exec_depend> -->
   <exec_depend>mocap4r2_control</exec_depend>
   <exec_depend>mocap4r2_control_msgs</exec_depend>
 

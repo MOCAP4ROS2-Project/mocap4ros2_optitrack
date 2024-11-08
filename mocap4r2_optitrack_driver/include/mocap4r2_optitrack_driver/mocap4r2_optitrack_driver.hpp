@@ -32,10 +32,10 @@
 
 #include "rclcpp/time.hpp"
 
-#include "mocap4r2_msgs/msg/marker.hpp"
-#include "mocap4r2_msgs/msg/markers.hpp"
-#include "mocap4r2_msgs/msg/rigid_body.hpp"
-#include "mocap4r2_msgs/msg/rigid_bodies.hpp"
+#include "mocap_interfaces/msg/marker.hpp"
+#include "mocap_interfaces/msg/marker_array.hpp"
+#include "mocap_interfaces/msg/rigid_body.hpp"
+#include "mocap_interfaces/msg/rigid_body_array.hpp"
 
 #include "std_msgs/msg/empty.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
@@ -98,9 +98,9 @@ protected:
   sFrameOfMocapData latest_data;
   sRigidBodyData latest_body_frame_data;
 
-  rclcpp_lifecycle::LifecyclePublisher<mocap4r2_msgs::msg::Markers>::SharedPtr
+  rclcpp_lifecycle::LifecyclePublisher<mocap_interfaces::msg::MarkerArray>::SharedPtr
     mocap4r2_markers_pub_;
-  rclcpp_lifecycle::LifecyclePublisher<mocap4r2_msgs::msg::RigidBodies>::SharedPtr
+  rclcpp_lifecycle::LifecyclePublisher<mocap_interfaces::msg::RigidBodyArray>::SharedPtr
     mocap4r2_rigid_body_pub_;
 
   std::string connection_type_;
