@@ -1,12 +1,12 @@
-name: humble
+name: rep-mocap
 
 on:
   pull_request:
     branches:
-      - rolling
+      - rep-mocap
   push:
     branches:
-      - rolling
+      - rep-mocap
       
 jobs:
   build-and-test:
@@ -16,16 +16,18 @@ jobs:
         os: [ubuntu-22.04]
       fail-fast: false
     steps:
+      - name: Repo checkout
+        uses: actions/checkout@v2
       - name: Setup ROS 2
         uses: ros-tooling/setup-ros@0.7.9
         with:
-          required-ros-distributions: humble
+          required-ros-distributions: rolling
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.3.15
         with:
           package-name: mocap4r2_optitrack_driver
-          target-ros2-distro: humble
-          vcs-repo-file-url: https://raw.githubusercontent.com/MOCAP4ROS2-Project/mocap4ros2_optitrack/rolling/dependency_repos.repos
+          target-ros2-distro: rolling
+          vcs-repo-file-url: ${GITHUB_WORKSPACE}/dependency_repos.repos
       - name: Codecov
         uses: codecov/codecov-action@v1.1.0
         with:
