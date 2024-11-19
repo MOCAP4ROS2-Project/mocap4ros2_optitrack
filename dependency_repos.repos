@@ -6,4 +6,4 @@ repositories:
   mocap4r2:
     type: git
     url: https://github.com/MOCAP4ROS2-Project/mocap4r2.git
-    version: rolling
+    version: rep-mocap
