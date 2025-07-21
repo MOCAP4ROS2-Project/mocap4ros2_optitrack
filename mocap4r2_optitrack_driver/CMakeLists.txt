@@ -75,6 +75,9 @@ install(TARGETS
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
+install(FILES ${CMAKE_SOURCE_DIR}/NatNetSDK/lib/libNatNet.so
+        DESTINATION lib)
+
 install(TARGETS
   ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
