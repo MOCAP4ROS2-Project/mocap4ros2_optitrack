@@ -111,6 +111,8 @@ protected:
   uint16_t server_data_port_;
 
   uint32_t frame_number_{0};
+
+  std::string reference_frame_;
 };
 
 void NATNET_CALLCONV process_frame_callback(sFrameOfMocapData * data, void * pUserData);
